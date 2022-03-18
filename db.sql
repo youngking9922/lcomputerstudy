@@ -33,11 +33,11 @@ CREATE TABLE IF NOT EXISTS `board` (
 -- 테이블 데이터 yyyy.board:~5 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `board` DISABLE KEYS */;
 INSERT INTO `board` (`b_idx`, `b_title`, `b_content`, `b_date`, `b_writer`, `u_idx`, `view_count`) VALUES
-	(1, '제목', '내용', '2022-03-17 10:22:20', 'NAME1', 1, 0),
+	(1, '제목', '내용', '2022-03-17 10:22:20', 'NAME1', 1, 10),
 	(2, '제목', '내용', '2022-03-17 10:24:28', 'NAME1', 1, 0),
-	(3, 'fdsfasdg', 'sdgggggggggggggggggggggggggggggg', '2022-03-17 10:25:06', '김땡땡', 3, 0),
-	(4, '테스트테스트테스트', '테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트', '2022-03-17 10:26:39', '김땡땡', 3, 0),
-	(6, 'sdfasdfsd', 'sadfsdfsdafasd', '2022-03-17 11:30:07', 'dd', 17, 0);
+	(3, 'fdsfasdg', 'sdgggggggggggggggggggggggggggggg', '2022-03-17 10:25:06', '김땡땡', 3, 1),
+	(4, '테스트테스트테스트', '테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트', '2022-03-17 10:26:39', '김땡땡', 3, 3),
+	(6, 'sdfasdfsd', 'sadfsdfsdafasd', '2022-03-17 11:30:07', 'dd', 17, 25);
 /*!40000 ALTER TABLE `board` ENABLE KEYS */;
 
 -- 테이블 yyyy.user 구조 내보내기
