@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>게시글 보기</title>
+<title>게시글 수정</title>
 </head>
 <style>
 	.wrap {
@@ -57,33 +57,21 @@
 <div class="wrap">
 	<h1>게시글 보기</h1>
 	<c:forEach items="${list}" var="item" varStatus="status">
-		<table>
-			<tr>
-				<th>제목</th>
-				<td>${item.title}</td>
-			</tr>
-			<tr>
-				<th>내용</th>
-				<td>${item.content}</td>
-			</tr>
-			<tr>
-				<th>작성자</th>
-				<td>${item.writer}</td>
-			</tr>
-			<tr>
-				<th>작성일시</th>
-				<td>${item.date}</td>
-			</tr>
-			<tr>
-				<th>조회수</th>
-				<td>${item.view_count}</td>
-			</tr>		
-		</table>
-		
+	
+	<form action="board-insert-process.do" name="board" method="post">
+		<div>
+			<p>제목<input type ="text" size=60 name="title" value="${item.title }"></p>
+			
+		</div>
+		<div>
+			<p>내용</p><textarea rows="20" cols="60" name="content" >${item.content }</textarea>
+		</div>
+		<input type="text" value="${sessionScope.user.u_name }" name="writer">	
+		<input type="text" value="${sessionScope.user.u_idx}" name="u_idx">
+	</form>
+	
 	<div class="btn">
-		<ul>
-			<li><a href="board-modify.do?b_idx=${item.b_idx}">수정</a><li>
-		</ul>
+		<input type="submit" value="확인">
 	</div>
 	</c:forEach>
 	

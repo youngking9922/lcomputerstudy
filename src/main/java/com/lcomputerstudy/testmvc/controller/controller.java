@@ -151,6 +151,14 @@ public class controller extends HttpServlet {
 				request.setAttribute("list", list2);
 				view = "board/board_detail";
 				break;
+			case "/board-modify.do":
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				boardService = BoardService.getInstance();
+				ArrayList<Board> list3 = boardService.getInfo(board);
+				request.setAttribute("list",list3);
+				view = "board/board_modify";
+				break;
 		
 		}
 		RequestDispatcher rd = request.getRequestDispatcher(view+".jsp");

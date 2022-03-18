@@ -113,7 +113,8 @@ public class BoardDAO {
 				board.setView_count(Integer.parseInt(rs.getString("view_count")));
 				list.add(board);
 			}
-			
+			pstmt.close();
+			rs.close();
 			String query2 = "update board set view_count = view_count+1 where b_idx=?";
 			pstmt = conn.prepareStatement(query2);
 			pstmt.setInt(1,b_idx);
