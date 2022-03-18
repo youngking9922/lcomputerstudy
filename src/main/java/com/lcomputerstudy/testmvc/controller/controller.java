@@ -148,7 +148,7 @@ public class controller extends HttpServlet {
 				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
 				view = "board/board_detail";
 				boardService = BoardService.getInstance();
-				ArrayList<Board> list2 = boardService.getInfo();
+				ArrayList<Board> list2 = boardService.getInfo(); // test
 				request.setAttribute("list", list2);
 				break;
 		
