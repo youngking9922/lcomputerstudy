@@ -146,10 +146,10 @@ public class controller extends HttpServlet {
 			case "/board-detail.do":
 				board = new Board();
 				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
-				view = "board/board_detail";
 				boardService = BoardService.getInstance();
-				ArrayList<Board> list2 = boardService.getInfo(); // test
+				ArrayList<Board> list2 = boardService.getInfo(board); 
 				request.setAttribute("list", list2);
+				view = "board/board_detail";
 				break;
 		
 		}

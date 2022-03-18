@@ -30,7 +30,7 @@ public class BoardService {
 		return dao.getBoard();
 	}
 	
-	public ArrayList<Board> getInfo(){
-		return dao.getInfo();
+	public ArrayList<Board> getInfo(Board board){
+		return dao.getInfo(board);
 	}
 }

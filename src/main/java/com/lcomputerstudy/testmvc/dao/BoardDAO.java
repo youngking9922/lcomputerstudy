@@ -47,6 +47,7 @@ public class BoardDAO {
 				board.setWriter(rs.getString("b_writer"));
 				board.setDate(rs.getString("b_date"));
 				board.setB_idx(rs.getInt("b_idx"));
+				board.setView_count(Integer.parseInt(rs.getString("view_count")));
 				list.add(board);
 			}
 			
@@ -88,19 +89,18 @@ public class BoardDAO {
 		}
 	}
 	
-	public ArrayList<Board> getInfo() {
+	public ArrayList<Board> getInfo(Board board) {
 		Connection conn =null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ArrayList<Board> list = null;
-		Board board = new Board();
+		int b_idx = board.getB_idx();
 		
 		try {
-			
 			conn = DBConnection.getConnection();
 			String query = "select * from board where b_idx = ?";
 			pstmt = conn.prepareStatement(query);
-			pstmt.setInt(1, board.getB_idx());
+			pstmt.setInt(1, b_idx);
 			rs = pstmt.executeQuery();
 			list = new ArrayList<Board>();
 			
@@ -110,15 +110,23 @@ public class BoardDAO {
 				board.setWriter(rs.getString("b_writer"));
 				board.setDate(rs.getString("b_date"));
 				board.setB_idx(rs.getInt("b_idx"));
+				board.setView_count(Integer.parseInt(rs.getString("view_count")));
 				list.add(board);
 			}
+			
+			String query2 = "update board set view_count = view_count+1 where b_idx=?";
+			pstmt = conn.prepareStatement(query2);
+			pstmt.setInt(1,b_idx);
+			rs = pstmt.executeQuery();
+
 			
 		} catch(Exception ex) {
 			System.out.println("SQLException : " + ex.getMessage());
 		} finally {
-			try {rs.close();
-			pstmt.close();
-			conn.close();
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
 			}
 			catch (SQLException e) {
 				e.printStackTrace();

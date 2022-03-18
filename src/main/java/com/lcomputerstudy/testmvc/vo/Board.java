@@ -7,6 +7,7 @@ public class Board {
 	private String date;
 	private int u_idx;
 	private int b_idx;
+	private int view_count;
 	
 	public String getTitle(){
 		return title;
@@ -54,6 +55,14 @@ public class Board {
 	
 	public void setB_idx(int b_idx) {
 		this.b_idx = b_idx;
+	}
+	
+	public int getView_count() {
+		return view_count;
+	}
+	
+	public void setView_count(int view_count) {
+		this.view_count = view_count;
 	}
 	
 }

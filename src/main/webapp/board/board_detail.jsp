@@ -8,6 +8,10 @@
 <title>게시글 보기</title>
 </head>
 <style>
+	.wrap {
+		width:100%;
+		margin:0 auto;
+	}
 	table {
 		border-collapse:collapse;
 		margin:40px auto;
@@ -43,8 +47,14 @@
 		margin: 0 5px;
 		border-radius:5px;
 	}
+	.btn {
+		width:100%; 
+		margin:0px auto;
+		text-align:center;
+	 }
 </style>
 <body>
+<div class="wrap">
 	<h1>게시글 보기</h1>
 	<c:forEach items="${list}" var="item" varStatus="status">
 		<table>
@@ -52,14 +62,28 @@
 				<th>제목</th>
 				<td>${item.title}</td>
 			</tr>
-			
-				<tr>
-					<td>${item.title}</td>
-					<td>${item.writer}</td>
-					<td>${item.date}</td>
-				</tr>
+			<tr>
+				<th>내용</th>
+				<td>${item.content}</td>
+			</tr>
+			<tr>
+				<th>작성자</th>
+				<td>${item.writer}</td>
+			</tr>
+			<tr>
+				<th>작성일시</th>
+				<td>${item.date}</td>
+			</tr>
+			<tr>
+				<th>조회수</th>
+				<td>${item.view_count}</td>
+			</tr>
 			
 		</table>
 	</c:forEach>
+	<div class="btn">
+		<input type="button" value="수정">
+	</div>
+</div>
 </body>
 </html>
