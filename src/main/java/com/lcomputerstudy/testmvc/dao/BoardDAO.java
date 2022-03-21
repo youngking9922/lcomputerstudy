@@ -107,7 +107,7 @@ public class BoardDAO {
 		return count;
 	}
 	
-	public void insertUser(Board board) {
+	public void insertBoard(Board board) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -116,18 +116,29 @@ public class BoardDAO {
 		try {
 			
 			conn=DBConnection.getConnection();
-			String sql = "insert into board(b_title,b_content,b_date,b_writer,u_idx) values(?,?,?,?,?)";
+			String sql = "insert into board (b_title,b_content,b_date,b_writer,u_idx,view_count,`group`,`order`,depth) value(?,?,?,?,?,0,0,1,0)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1,board.getTitle());
 			pstmt.setString(2,board.getContent());
 			pstmt.setString(3,date.format(timestamp));
 			pstmt.setString(4,board.getWriter());
 			pstmt.setInt(5,board.getU_idx());
-			pstmt.executeQuery();
-		} catch(Exception ex) {
-			System.out.println("SQLException : " +ex.getMessage());
-		} finally {
+			pstmt.executeUpdate();
+			pstmt.close();
 			
+			sql = "update board set group = last_insert_id() where b_idx = last_insert_id()";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.executeUpdate();
+			pstmt.close();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

@@ -146,7 +146,7 @@ public class controller extends HttpServlet {
 				board.setU_idx(iu_idx);
 				
 				boardService = BoardService.getInstance();
-				boardService.insertUser(board);
+				boardService.insertBoard(board);
 						
 				view = "board/insert-result";
 				break;
@@ -198,7 +198,7 @@ public class controller extends HttpServlet {
 		
 		String[] authList = {
 			
-			"/user-insert.do"
+				"/user-insert.do"
 				,"/user-insert-process.do"
 				,"/user-detail.do"
 				,"/user-edit.do"
