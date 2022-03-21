@@ -8,6 +8,7 @@ public class Board {
 	private int u_idx;
 	private int b_idx;
 	private int view_count;
+	private int ROWNUM;
 	
 	public String getTitle(){
 		return title;
@@ -65,4 +66,11 @@ public class Board {
 		this.view_count = view_count;
 	}
 	
+	public int getROWNUM() {
+		return ROWNUM;
+	}
+	
+	public void setRownum(int ROWNUM) {
+		this.ROWNUM = ROWNUM;
+	}
 }

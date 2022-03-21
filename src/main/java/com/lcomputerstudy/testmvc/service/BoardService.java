@@ -2,7 +2,6 @@ package com.lcomputerstudy.testmvc.service;
 
 import java.util.ArrayList;
 import com.lcomputerstudy.testmvc.dao.BoardDAO;
-import com.lcomputerstudy.testmvc.dao.UserDAO;
 import com.lcomputerstudy.testmvc.vo.Pagination;
 import com.lcomputerstudy.testmvc.vo.Board;
 
@@ -26,11 +25,25 @@ public class BoardService {
 		dao.insertUser(board);
 	}
 	
-	public ArrayList<Board> getBoard(){
-		return dao.getBoard();
+	public ArrayList<Board> getBoard(Pagination pagination){
+		return dao.getBoard(pagination);
 	}
 	
 	public ArrayList<Board> getInfo(Board board){
 		return dao.getInfo(board);
 	}
+	
+	public void modifyUser(Board board) {
+		dao.modifyUser(board);
+	}
+	
+	public void deleteUser(Board board) {
+		dao.deleteUser(board);
+	}
+	
+	public static int getBoardCount() {
+		return dao.getBoardCount();
+	}
+	
+	
 }

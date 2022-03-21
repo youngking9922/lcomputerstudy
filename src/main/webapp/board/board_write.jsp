@@ -18,9 +18,9 @@
 			<p>내용</p><textarea rows="20" cols="60" name="content"></textarea>
 		</div>
 		<input type="hidden" value="${sessionScope.user.u_name }" name="writer">
-		
-		<input type="submit" value="글쓰기">
 		<input type="hidden" value="${sessionScope.user.u_idx}" name="u_idx">
+		<input type="submit" value="글쓰기">
+		
 	</form>
 </body>
 </html>

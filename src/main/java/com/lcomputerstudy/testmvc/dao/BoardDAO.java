@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import com.lcomputerstudy.testmvc.database.DBConnection;
 import com.lcomputerstudy.testmvc.vo.Pagination;
+import com.lcomputerstudy.testmvc.vo.User;
 import com.lcomputerstudy.testmvc.vo.Board;
 
 import java.sql.Timestamp;
@@ -27,21 +28,31 @@ public class BoardDAO {
 		return dao;
 	}
 	
-	public ArrayList<Board> getBoard(){
+	public ArrayList<Board> getBoard(Pagination pagination){
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		ArrayList<Board> list =null;
+		ArrayList<Board> list = null;
+		int pageNum = pagination.getPageNum();
 		
 		try {
 			conn = DBConnection.getConnection();
-			String query = "select * from board";
-			pstmt = conn.prepareStatement(query);
-			rs = pstmt.executeQuery();
-			list = new ArrayList<Board>();
-			
-			while(rs.next()) {
-				Board board = new Board();
+			String query = new StringBuilder()
+					.append("SELECT 		@ROWNUM := @ROWNUM - 1 AS ROWNUM,\n")
+					.append("				ta.*\n")
+					.append("FROM 			board ta,\n")
+					.append("				(SELECT @rownum := (SELECT	COUNT(*)-?+1 FROM board ta)) tb\n")
+					.append("LIMIT			?, ?\n")
+					.toString();
+	       	pstmt = conn.prepareStatement(query);
+	       	pstmt.setInt(1, pageNum);
+	       	pstmt.setInt(2, pageNum);
+	       	pstmt.setInt(3, Pagination.perPage);
+	        rs = pstmt.executeQuery();
+	        list = new ArrayList<Board>();
+
+	        while(rs.next()){     
+	        	Board board = new Board();
 				board.setTitle(rs.getString("b_title"));
 				board.setContent(rs.getString("b_content"));
 				board.setWriter(rs.getString("b_writer"));
@@ -49,20 +60,51 @@ public class BoardDAO {
 				board.setB_idx(rs.getInt("b_idx"));
 				board.setView_count(Integer.parseInt(rs.getString("view_count")));
 				list.add(board);
-			}
+	        }
 			
-		} catch(Exception e) {
+		} catch (Exception e){
 			e.printStackTrace();
 		} finally {
 			try {
-				rs.close();
-				pstmt.close();
-				conn.close();
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 		return list;
+	}
+	
+	public int getBoardCount() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int count=0;
+		
+		try {
+			conn = DBConnection.getConnection();
+			String query = "SELECT COUNT(*) count FROM board";
+			pstmt = conn.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				count=rs.getInt("count");
+			}
+			
+		} catch (Exception e) {
+			
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return count;
 	}
 	
 	public void insertUser(Board board) {
@@ -110,6 +152,7 @@ public class BoardDAO {
 				board.setWriter(rs.getString("b_writer"));
 				board.setDate(rs.getString("b_date"));
 				board.setB_idx(rs.getInt("b_idx"));
+				board.setU_idx(rs.getInt("u_idx"));
 				board.setView_count(Integer.parseInt(rs.getString("view_count")));
 				list.add(board);
 			}
@@ -134,5 +177,51 @@ public class BoardDAO {
 			}
 		}
 		return list;
+	}
+	
+	public void modifyUser(Board board) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			String sql = "update board set b_title = ? , b_content = ? where b_idx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, board.getTitle());
+			pstmt.setString(2, board.getContent());
+			pstmt.setInt(3, board.getB_idx());
+			pstmt.executeUpdate();
+		} catch (Exception ex) {
+			System.out.println("SQLException : " +ex.getMessage());
+		} finally {
+			try {
+				if (pstmt!=null) pstmt.close();
+				if (conn!=null)conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void deleteUser(Board board) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			String sql = "delete from board where b_idx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, board.getB_idx());
+			pstmt.executeUpdate();
+		} catch (Exception ex) {
+			System.out.println("SQLException : "+ex.getMessage());
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

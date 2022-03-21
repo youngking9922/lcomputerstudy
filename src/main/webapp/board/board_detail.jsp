@@ -45,13 +45,8 @@
 		float:left;
 		text-align:center;
 		margin: 0 5px;
-		border-radius:5px;
 	}
-	.btn {
-		width:100%; 
-		margin:0px auto;
-		text-align:center;
-	 }
+
 </style>
 <body>
 <div class="wrap">
@@ -80,11 +75,13 @@
 			</tr>		
 		</table>
 		
-	<div class="btn">
-		<ul>
-			<li><a href="board-modify.do?b_idx=${item.b_idx}">수정</a><li>
-		</ul>
-	</div>
+
+	<ul>
+		<li><a href="board-modify.do?b_idx=${item.b_idx}">수정</a></li>
+		<li><a href="board-delete-process.do?b_idx=${item.b_idx}">삭제</a></li>
+		<li><a href="board-list.do">목록</a></li>
+	</ul>
+
 	</c:forEach>
 	
 </div>

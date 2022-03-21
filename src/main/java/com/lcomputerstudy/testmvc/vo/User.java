@@ -1,5 +1,6 @@
 package com.lcomputerstudy.testmvc.vo;
 
+
 public class User {
 	
 	private int u_idx;
@@ -53,4 +54,5 @@ public class User {
 		this.ROWNUM = ROWNUM;
 		
 	}
+	
 }

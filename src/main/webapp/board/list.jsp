@@ -43,9 +43,16 @@
 		margin: 0 5px;
 		border-radius:5px;
 	}
+	.write_btn{
+		width:10%;
+		margin:0 auto;
+		text-align:center;
+		border:1px solid #ededed;
+	}
 </style>
 <body>
 	<h1>게시글 목록</h1>
+	<div class="write_btn"><a href="board-write.do">글쓰기</a></div>
 		<table>
 			<tr>
 				<th>No</th>
@@ -64,5 +71,41 @@
 				</tr>
 			</c:forEach>
 		</table>
+	<div>
+		<ul>
+			 <c:choose>
+				<c:when test="${ pagination.prevPage >= 1}">
+					<li>
+						<a href="board-list.do?page=${pagination.prevPage}">
+							◀
+						</a>
+					</li>
+				</c:when>
+			</c:choose> 
+			<c:forEach var="i" begin="${pagination.startPage}" end="${pagination.endPage}" step="1">
+				
+					<c:choose>
+						<c:when test="${ pagination.page eq i }">
+							
+							<li style="background-color:#ededed;">
+								<span>${i}</span>
+							</li>
+						</c:when>
+						<c:when test="${ pagination.page ne i }">
+							<li>
+								<a href="board-list.do?page=${i}">${i}</a>
+							</li>
+						</c:when>
+					</c:choose>
+			</c:forEach>
+			 <c:choose>
+				<c:when test="${ pagination.nextPage <= pagination.lastPage }">
+					<li style="">
+						<a href="board-list.do?page=${pagination.nextPage}">▶</a>
+					</li>
+				</c:when>
+			</c:choose> 
+		</ul>
+	</div>
 </body>
 </html>

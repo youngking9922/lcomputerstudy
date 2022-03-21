@@ -11,6 +11,7 @@
 	.wrap {
 		width:100%;
 		margin:0 auto;
+		text-align:center;
 	}
 	table {
 		border-collapse:collapse;
@@ -55,24 +56,26 @@
 </style>
 <body>
 <div class="wrap">
-	<h1>게시글 보기</h1>
+	<h1>게시글 수정</h1>
 	<c:forEach items="${list}" var="item" varStatus="status">
 	
-	<form action="board-insert-process.do" name="board" method="post">
+	<form action="board-modify-process.do" name="board" method="post">
 		<div>
-			<p>제목<input type ="text" size=60 name="title" value="${item.title }"></p>
+			<p>제목<input type ="text" size=60 name="title" value="${item.title}"></p>
 			
 		</div>
 		<div>
-			<p>내용</p><textarea rows="20" cols="60" name="content" >${item.content }</textarea>
+			<p>내용<textarea rows="20" cols="60" name="content" >${item.content}</textarea></p>
 		</div>
-		<input type="text" value="${sessionScope.user.u_name }" name="writer">	
-		<input type="text" value="${sessionScope.user.u_idx}" name="u_idx">
+		<p>작성자> ${item.writer}</p>
+			<input type="hidden" value="${item.b_idx}" name="b_idx">
+		<div class="btn">
+			<input type="submit" value="확인">
+		</div>
+	
 	</form>
 	
-	<div class="btn">
-		<input type="submit" value="확인">
-	</div>
+	
 	</c:forEach>
 	
 </div>

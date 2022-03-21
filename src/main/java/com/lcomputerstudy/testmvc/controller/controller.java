@@ -36,6 +36,7 @@ public class controller extends HttpServlet {
 		String view = null;
 		
 		int usercount = 0;
+		int boardcount =0;
 		response.setContentType("text/html; charset=utf-8");
 		request.setCharacterEncoding("utf-8");
 		
@@ -116,10 +117,22 @@ public class controller extends HttpServlet {
 				view = "user/access-denied";
 				break;
 			case "/board-list.do":
-				boardService = BoardService.getInstance();
-				ArrayList<Board> list1 = boardService.getBoard();
-				request.setAttribute("list", list1);
+				String reqPage2 = request.getParameter("page");
+				if (reqPage2 != null)
+					page = Integer.parseInt(reqPage2);
 				
+				boardService = BoardService.getInstance();
+				boardcount = BoardService.getBoardCount();
+				
+				Pagination pagination2 = new Pagination();
+				pagination2.setCount(boardcount);
+				pagination2.setPage(page);
+				pagination2.init();
+				
+				ArrayList<Board> list6 = boardService.getBoard(pagination2);
+				request.setAttribute("list", list6);
+				request.setAttribute("pagination", pagination2);
+
 				view = "board/list";
 				break;
 			case "/board-insert-process.do":
@@ -131,14 +144,11 @@ public class controller extends HttpServlet {
 				String u_idx = request.getParameter("u_idx");
 				int iu_idx = Integer.parseInt(u_idx);
 				board.setU_idx(iu_idx);
-				String b_idx = (request.getParameter("b_idx"));
-				int ib_idx = Integer.parseInt(b_idx);
-				board.setB_idx(ib_idx);
 				
 				boardService = BoardService.getInstance();
 				boardService.insertUser(board);
 						
-				view = "user/insert-result";
+				view = "board/insert-result";
 				break;
 			case "/board-write.do":
 				view = "board/board_write";	
@@ -159,6 +169,24 @@ public class controller extends HttpServlet {
 				request.setAttribute("list",list3);
 				view = "board/board_modify";
 				break;
+			case "/board-modify-process.do":
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				board.setTitle(request.getParameter("title"));
+				board.setContent(request.getParameter("content"));
+				
+				boardService = BoardService.getInstance();
+				boardService.modifyUser(board);
+				view = "board/modify-result";
+				break;
+			case "/board-delete-process.do":
+				board = new Board();
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				
+				boardService = BoardService.getInstance();
+				boardService.deleteUser(board);
+				view = "board/delete-result";
+				break;
 		
 		}
 		RequestDispatcher rd = request.getRequestDispatcher(view+".jsp");
@@ -169,8 +197,8 @@ public class controller extends HttpServlet {
 		HttpSession session = request.getSession();
 		
 		String[] authList = {
-				"/user-list.do"
-				,"/user-insert.do"
+			
+			"/user-insert.do"
 				,"/user-insert-process.do"
 				,"/user-detail.do"
 				,"/user-edit.do"
