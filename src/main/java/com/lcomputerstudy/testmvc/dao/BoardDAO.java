@@ -55,9 +55,9 @@ public class BoardDAO {
 
 	        while(rs.next()){     
 	        	Board board = new Board();
-	        	int count =0;
+	        	String count = " ";
 	        	for (int i=0; i<Integer.parseInt(rs.getString("depth")); i++) {
-	        		count =i;
+	        		count +="ㄴ";
 	        	}
 	        	
 				board.setTitle(count+rs.getString("b_title"));
