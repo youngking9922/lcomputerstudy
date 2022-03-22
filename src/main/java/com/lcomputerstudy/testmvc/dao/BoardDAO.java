@@ -184,7 +184,7 @@ public class BoardDAO {
 			pstmt.setInt(1,b_idx);
 			rs = pstmt.executeQuery();
 			
-			String query3 = "select c_content from comment";
+			String query3 = "select * from comment";
 			pstmt = conn.prepareStatement(query3);
 			//pstmt.setInt(1, b_idx);
 			rs = pstmt.executeQuery();
