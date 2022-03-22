@@ -1,5 +1,5 @@
 package com.lcomputerstudy.testmvc.vo;
-
+//주석
 public class Board {
 	private String title;
 	private String content;

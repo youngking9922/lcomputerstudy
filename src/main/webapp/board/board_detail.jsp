@@ -48,7 +48,7 @@
 		margin: 0 5px;
 	}
 	.comment {
-		width:100%;
+		
 		text-align:center;
 	}
 

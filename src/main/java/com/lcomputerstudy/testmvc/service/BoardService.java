@@ -1,5 +1,5 @@
 package com.lcomputerstudy.testmvc.service;
-
+//주석
 import java.util.ArrayList;
 import com.lcomputerstudy.testmvc.dao.BoardDAO;
 import com.lcomputerstudy.testmvc.vo.Pagination;
