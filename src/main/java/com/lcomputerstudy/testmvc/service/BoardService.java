@@ -45,5 +45,9 @@ public class BoardService {
 		return dao.getBoardCount();
 	}
 	
+	public void insertReply(Board board) {
+		dao.insertReply(board);
+	}
+	
 	
 }

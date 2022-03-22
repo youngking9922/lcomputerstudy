@@ -25,19 +25,27 @@ CREATE TABLE IF NOT EXISTS `board` (
   `b_writer` varchar(255) NOT NULL,
   `u_idx` int(10) NOT NULL,
   `view_count` int(11) NOT NULL DEFAULT 0,
+  `group` int(11) DEFAULT NULL,
+  `order` int(11) DEFAULT NULL,
+  `depth` int(11) DEFAULT NULL,
   PRIMARY KEY (`b_idx`),
   KEY `u_idx` (`u_idx`),
   CONSTRAINT `board_ibfk_1` FOREIGN KEY (`u_idx`) REFERENCES `user` (`u_idx`) ON DELETE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8;
 
--- 테이블 데이터 yyyy.board:~5 rows (대략적) 내보내기
+-- 테이블 데이터 yyyy.board:~11 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `board` DISABLE KEYS */;
-INSERT INTO `board` (`b_idx`, `b_title`, `b_content`, `b_date`, `b_writer`, `u_idx`, `view_count`) VALUES
-	(1, '제목', '내용', '2022-03-17 10:22:20', 'NAME1', 1, 10),
-	(2, '제목', '내용', '2022-03-17 10:24:28', 'NAME1', 1, 0),
-	(3, 'fdsfasdg', 'sdgggggggggggggggggggggggggggggg', '2022-03-17 10:25:06', '김땡땡', 3, 1),
-	(4, '테스트테스트테스트', '테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트테스트', '2022-03-17 10:26:39', '김땡땡', 3, 3),
-	(6, 'sdfasdfsd', 'sadfsdfsdafasd', '2022-03-17 11:30:07', 'dd', 17, 25);
+INSERT INTO `board` (`b_idx`, `b_title`, `b_content`, `b_date`, `b_writer`, `u_idx`, `view_count`, `group`, `order`, `depth`) VALUES
+	(41, 'test', 'testtesttesttesttesttesttesttesttesttest', '2022-03-22 09:18:11', 'dd', 17, 89, 41, 1, 0),
+	(93, 't-1', 'safd', '12', 'dd', 17, 7, 41, 11, 1),
+	(94, 't-2', 'asdfsadf', '12', 'dd', 17, 1, 41, 9, 1),
+	(95, 't-3', 'sadfsafd', '12', 'dd', 17, 0, 41, 8, 1),
+	(96, 't-4', 'sdafsaf', '12', 'dd', 17, 2, 41, 4, 1),
+	(99, 't1-1', 'dsfafsd', '12', 'ff', 21, 0, 41, 12, 2),
+	(100, 't4-1', 'sdfasdf', '12', 'dd', 17, 1, 41, 5, 2),
+	(101, 't4-1-1', 'asdfasd', '12', 'dd', 17, 2, 41, 6, 3),
+	(102, '4-1-1-1', 'sdgsdg', '2022-03-22 11:15:18', 'dd', 17, 0, 41, 7, 4),
+	(103, 't2-1', 'sdaf', '2022-03-22 11:15:34', 'dd', 17, 0, 41, 10, 2);
 /*!40000 ALTER TABLE `board` ENABLE KEYS */;
 
 -- 테이블 yyyy.user 구조 내보내기
@@ -49,9 +57,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   `u_tel` varchar(255) NOT NULL,
   `u_age` int(10) NOT NULL,
   PRIMARY KEY (`u_idx`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
--- 테이블 데이터 yyyy.user:~17 rows (대략적) 내보내기
+-- 테이블 데이터 yyyy.user:~18 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` (`u_idx`, `u_id`, `u_pw`, `u_name`, `u_tel`, `u_age`) VALUES
 	(1, 'abc', '1234', 'NAME1', '010-0000-0000', 0),
@@ -70,7 +78,8 @@ INSERT INTO `user` (`u_idx`, `u_id`, `u_pw`, `u_name`, `u_tel`, `u_age`) VALUES
 	(17, 'dd', 'dd', 'dd', '010-1344-1234', 12),
 	(18, '테스트2', '테스트2', '테스트2', '010-1234-1234', 20),
 	(19, '테스트3', '테스트3', '테스트3', '010-1234-1234', 20),
-	(20, '테스트4', '1234', '테스트4', '010-2222-2222', 10);
+	(20, '테스트4', '1234', '테스트4', '010-2222-2222', 10),
+	(21, 'ff', 'ff', 'ff', '010-1234-1234', 12);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -42,7 +42,9 @@ public class BoardDAO {
 					.append("				ta.*\n")
 					.append("FROM 			board ta,\n")
 					.append("				(SELECT @rownum := (SELECT	COUNT(*)-?+1 FROM board ta)) tb\n")
+					.append("order by `order` ")
 					.append("LIMIT			?, ?\n")
+					
 					.toString();
 	       	pstmt = conn.prepareStatement(query);
 	       	pstmt.setInt(1, pageNum);
@@ -53,7 +55,12 @@ public class BoardDAO {
 
 	        while(rs.next()){     
 	        	Board board = new Board();
-				board.setTitle(rs.getString("b_title"));
+	        	int count =0;
+	        	for (int i=0; i<Integer.parseInt(rs.getString("depth")); i++) {
+	        		count =i;
+	        	}
+	        	
+				board.setTitle(count+rs.getString("b_title"));
 				board.setContent(rs.getString("b_content"));
 				board.setWriter(rs.getString("b_writer"));
 				board.setDate(rs.getString("b_date"));
@@ -126,7 +133,7 @@ public class BoardDAO {
 			pstmt.executeUpdate();
 			pstmt.close();
 			
-			sql = "update board set group = last_insert_id() where b_idx = last_insert_id()";
+			sql = "update board set `group` = last_insert_id() where b_idx = last_insert_id()";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.executeUpdate();
 			pstmt.close();
@@ -165,6 +172,9 @@ public class BoardDAO {
 				board.setB_idx(rs.getInt("b_idx"));
 				board.setU_idx(rs.getInt("u_idx"));
 				board.setView_count(Integer.parseInt(rs.getString("view_count")));
+				board.setGroup(rs.getInt("group"));
+				board.setDepth(rs.getInt("depth"));
+				board.setOrder(rs.getInt("order"));
 				list.add(board);
 			}
 			pstmt.close();
@@ -231,6 +241,45 @@ public class BoardDAO {
 				if(pstmt!=null) pstmt.close();
 				if(conn!=null) conn.close();
 			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void insertReply(Board board) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			String sql = "insert into board (b_title,b_content,b_date,b_writer,u_idx,view_count,`group`,`order`,depth) value(?,?,now(),?,?,0,?,?,?)";
+			pstmt =conn.prepareStatement(sql);
+			pstmt.setString(1,board.getTitle());
+			pstmt.setString(2,board.getContent());
+			pstmt.setString(3,board.getWriter());
+			pstmt.setInt(4,board.getU_idx());
+			pstmt.setInt(5, board.getGroup());
+			pstmt.setInt(6, board.getOrder());
+			pstmt.setInt(7, board.getDepth());
+			pstmt.executeUpdate();
+			pstmt.close();
+						
+			sql = "update board set `order` = `order`+1 where `group` = ? and `order` >= ? and b_idx <> last_insert_id() ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, board.getGroup());
+			pstmt.setInt(2, board.getOrder());
+			pstmt.executeUpdate();
+			pstmt.close();
+			
+			
+		} catch(Exception ex) {
+			System.out.println("SQLException:"+ex.getMessage());
+			ex.printStackTrace();
+		} finally{
+			try {
+				if(pstmt!=null)pstmt.close();
+				if(conn !=null)conn.close();
+			} catch(SQLException e) { 
 				e.printStackTrace();
 			}
 		}

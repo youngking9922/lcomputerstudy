@@ -39,7 +39,7 @@
 	}
 	li {
 		list-style:none;
-		width:50px;
+		width:70px;
 		line-height:50px;
 		border:1px solid #ededed;
 		float:left;
@@ -80,6 +80,7 @@
 		<li><a href="board-modify.do?b_idx=${item.b_idx}">수정</a></li>
 		<li><a href="board-delete-process.do?b_idx=${item.b_idx}">삭제</a></li>
 		<li><a href="board-list.do">목록</a></li>
+		<li><a href="board-write-reply.do?group=${item.group}&depth=${item.depth}&order=${item.order}">답글달기</a></li>
 	</ul>
 
 	</c:forEach>

@@ -8,6 +8,7 @@
 </head>
 <style>
 </style>
+<h2>글쓰기</h2>
 <body>
 	<form action="board-insert-process.do" name="board" method="post">
 		<div>

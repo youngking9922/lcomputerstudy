@@ -9,6 +9,9 @@ public class Board {
 	private int b_idx;
 	private int view_count;
 	private int ROWNUM;
+	private int group;
+	private int depth;
+	private int order;
 	
 	public String getTitle(){
 		return title;
@@ -72,5 +75,28 @@ public class Board {
 	
 	public void setRownum(int ROWNUM) {
 		this.ROWNUM = ROWNUM;
+	}
+	public int getGroup() {
+		return group;
+	}
+	
+	public void setGroup(int group) {
+		this.group=group;
+	}
+	
+	public int getDepth() {
+		return depth;
+	}
+	
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
+	
+	public int getOrder() {
+		return order;
+	}
+	
+	public void setOrder(int order) {
+		this.order = order;
 	}
 }

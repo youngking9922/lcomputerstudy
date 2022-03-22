@@ -187,7 +187,31 @@ public class controller extends HttpServlet {
 				boardService.deleteUser(board);
 				view = "board/delete-result";
 				break;
-		
+			case "/board-write-reply.do":
+				board = new Board();
+				board.setGroup(Integer.parseInt(request.getParameter("group")));
+				board.setDepth(Integer.parseInt(request.getParameter("depth")));
+				board.setOrder(Integer.parseInt(request.getParameter("order")));
+								
+				request.setAttribute("board", board);
+				view = "board/write_reply";
+				break;
+				
+			case "/board-reply-insert-process.do":
+				
+				board = new Board();
+				boardService = BoardService.getInstance();
+				board.setTitle(request.getParameter("title"));
+				board.setContent(request.getParameter("content"));
+				board.setWriter(request.getParameter("writer"));
+				board.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
+				board.setGroup(Integer.parseInt(request.getParameter("group")));
+				board.setDepth(Integer.parseInt(request.getParameter("depth"))+1);
+				board.setOrder(Integer.parseInt(request.getParameter("order"))+1);
+				
+				boardService.insertReply(board);
+				view = "board/insert-result";
+				break;
 		}
 		RequestDispatcher rd = request.getRequestDispatcher(view+".jsp");
 		rd.forward(request, response);
@@ -197,10 +221,8 @@ public class controller extends HttpServlet {
 		HttpSession session = request.getSession();
 		
 		String[] authList = {
-			
-				"/user-insert.do"
-				,"/user-insert-process.do"
-				,"/user-detail.do"
+		
+				"/user-detail.do"
 				,"/user-edit.do"
 				,"/user-edit-process.do"
 				,"/logout.do"
