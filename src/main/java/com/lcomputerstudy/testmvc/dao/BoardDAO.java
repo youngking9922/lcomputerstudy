@@ -183,6 +183,17 @@ public class BoardDAO {
 			pstmt = conn.prepareStatement(query2);
 			pstmt.setInt(1,b_idx);
 			rs = pstmt.executeQuery();
+			
+			String query3 = "select * from comment";
+			pstmt = conn.prepareStatement(query3);
+			//pstmt.setInt(1, b_idx);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				board.SetComment(rs.getString("comment"));
+				list.add(board);
+			}
+			
 
 			
 		} catch(Exception ex) {
@@ -280,6 +291,30 @@ public class BoardDAO {
 				if(pstmt!=null)pstmt.close();
 				if(conn !=null)conn.close();
 			} catch(SQLException e) { 
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void insertComment(Board board) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = DBConnection.getConnection();
+			String sql = "insert into comment (c_board_idx,c_content) value(?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, board.getB_idx());
+			pstmt.setString(2, board.getComment());
+			pstmt.executeUpdate();
+			pstmt.close();
+			
+		}catch(Exception ex){
+			System.out.println("SQLException: " + ex.getMessage());
+		}finally{
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			}catch	(SQLException e){
 				e.printStackTrace();
 			}
 		}

@@ -12,6 +12,7 @@ public class Board {
 	private int group;
 	private int depth;
 	private int order;
+	private String comment;
 	
 	public String getTitle(){
 		return title;
@@ -99,4 +100,13 @@ public class Board {
 	public void setOrder(int order) {
 		this.order = order;
 	}
+	
+	public String getComment() {
+		return comment;
+	}
+	
+	public void SetComment(String comment) {
+		this.comment = comment;
+	}
+	
 }

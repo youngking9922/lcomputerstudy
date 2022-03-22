@@ -49,5 +49,9 @@ public class BoardService {
 		dao.insertReply(board);
 	}
 	
+	public void insertComment(Board board) {
+		dao.insertComment(board);
+	}
+	
 	
 }

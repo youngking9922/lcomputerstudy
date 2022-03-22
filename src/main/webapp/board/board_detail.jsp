@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>게시글 보기</title>
 </head>
+
 <style>
 	.wrap {
 		width:100%;
@@ -34,7 +35,7 @@
 	}
 	ul {
 		width:400px;
-		height:500px;
+		height:50px;
 		margin:10px auto;
 	}
 	li {
@@ -46,9 +47,16 @@
 		text-align:center;
 		margin: 0 5px;
 	}
+	.comment {
+		width:100%;
+		text-align:center;
+	}
 
 </style>
 <body>
+<script type="text/javasciprt">
+
+</script>
 <div class="wrap">
 	<h1>게시글 보기</h1>
 	<c:forEach items="${list}" var="item" varStatus="status">
@@ -81,6 +89,18 @@
 		<li><a href="board-delete-process.do?b_idx=${item.b_idx}">삭제</a></li>
 		<li><a href="board-list.do">목록</a></li>
 		<li><a href="board-write-reply.do?group=${item.group}&depth=${item.depth}&order=${item.order}">답글달기</a></li>
+	</ul>
+	
+	<form action="board-comment-insert.do"name="form_comment" method="post">
+		<div class="comment">
+			<input type="text" name="comment" size="40" value="">
+			<input type="text" name="b_idx" value="${item.b_idx}">
+			<input type="submit" class="insert_comment_btn" value="댓글달기">
+		</div>
+	</form>
+	
+	<ul>
+		<li>${item.comment}</li>
 	</ul>
 
 	</c:forEach>

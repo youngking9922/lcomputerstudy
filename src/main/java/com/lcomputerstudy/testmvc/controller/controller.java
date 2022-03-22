@@ -212,6 +212,14 @@ public class controller extends HttpServlet {
 				boardService.insertReply(board);
 				view = "board/insert-result";
 				break;
+			case "/board-comment-insert.do":
+				board = new Board();
+				boardService = BoardService.getInstance();
+				board.SetComment(request.getParameter("comment"));
+				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				boardService.insertComment(board);
+				view = "board/list";
+				break;
 		}
 		RequestDispatcher rd = request.getRequestDispatcher(view+".jsp");
 		rd.forward(request, response);
