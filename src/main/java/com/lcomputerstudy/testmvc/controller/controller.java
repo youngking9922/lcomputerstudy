@@ -158,7 +158,9 @@ public class controller extends HttpServlet {
 				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
 				boardService = BoardService.getInstance();
 				ArrayList<Board> list2 = boardService.getInfo(board); 
+				ArrayList<Board> comment_list = boardService.getComment(board);
 				request.setAttribute("list", list2);
+				request.setAttribute("comment_list", comment_list);
 				view = "board/board_detail";
 				break;
 			case "/board-modify.do":
@@ -217,7 +219,27 @@ public class controller extends HttpServlet {
 				boardService = BoardService.getInstance();
 				board.SetComment(request.getParameter("comment"));
 				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
+				board.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
 				boardService.insertComment(board);
+				view = "board/list";
+				break;
+			case "/comment-comment-insert.do":
+				board = new Board();
+				boardService= BoardService.getInstance();
+				board.setC_board_idx(Integer.parseInt(request.getParameter("c_board_idx")));
+				board.SetComment(request.getParameter("c_content"));
+				board.setC_uidx(Integer.parseInt(request.getParameter("c_uidx")));
+				board.setC_group(Integer.parseInt(request.getParameter("c_group")));
+				board.setC_order(Integer.parseInt(request.getParameter("c_order"))+1);
+				board.setC_depth(Integer.parseInt(request.getParameter("c_depth"))+1);
+				boardService.insertComment_reply(board);
+				view = "board/list";
+				break;
+			case "comment-comment-insert-ajax.do":
+				board = new Board();
+				boardService= BoardService.getInstance();
+				board.setC_board_idx(Integer.parseInt(request.getParameter("a")));
+				
 				view = "board/list";
 				break;
 		}

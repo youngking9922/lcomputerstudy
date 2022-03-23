@@ -1,5 +1,4 @@
 package com.lcomputerstudy.testmvc.service;
-//주석
 import java.util.ArrayList;
 import com.lcomputerstudy.testmvc.dao.BoardDAO;
 import com.lcomputerstudy.testmvc.vo.Pagination;
@@ -51,6 +50,14 @@ public class BoardService {
 	
 	public void insertComment(Board board) {
 		dao.insertComment(board);
+	}
+	
+	public ArrayList<Board> getComment(Board board) {
+		return dao.getComment(board);
+	}
+	
+	public void insertComment_reply(Board board) {
+		dao.insertComment_reply(board);
 	}
 	
 	

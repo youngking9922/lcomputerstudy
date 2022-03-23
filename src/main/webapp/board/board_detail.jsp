@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>게시글 보기</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 
 <style>
@@ -48,8 +49,12 @@
 		margin: 0 5px;
 	}
 	.comment {
-		
+		width:50%;
 		text-align:center;
+		margin : 20px auto 10px auto;
+	}
+	.comment.content{
+		border:1px solid skyblue;
 	}
 
 </style>
@@ -94,17 +99,57 @@
 	<form action="board-comment-insert.do"name="form_comment" method="post">
 		<div class="comment">
 			<input type="text" name="comment" size="40" value="">
-			<input type="text" name="b_idx" value="${item.b_idx}">
+			<input type="hidden" name="b_idx" value="${item.b_idx}">
+			<input type="hidden" name= "u_idx" value="${item.u_idx}">
 			<input type="submit" class="insert_comment_btn" value="댓글달기">
 		</div>
 	</form>
-	
-	<ul>
-		<li>${item.comment}</li>
-	</ul>
-
 	</c:forEach>
 	
+	
+		<table>
+			<tr>
+				<th>댓글</th>
+				<td>작성자</td>
+				<td>댓글의 댓글달기</td>
+				<td>댓글</td>
+			</tr>
+			
+			<c:forEach items="${comment_list}" var="comment_item" varStatus="status">
+				<form action="comment-comment-insert.do"name="form_comment" method="post">
+						<input type="hidden" name="c_board_idx" value="${comment_item.c_board_idx}">
+						<input type="hidden" name="c_uidx" value="${sessionScope.user.u_idx}">
+						<input type="hidden" name="c_group" value="${comment_item.c_group}">
+						<input type="hidden" name="c_order" value="${comment_item.c_order}">
+						<input type="hidden" name="c_depth" value="${comment_item.c_depth}">	
+					<tr>
+						<td>${comment_item.comment}</td>
+						<td>${comment_item.c_uidx}</td>
+						<td><input type = "text" name="c_content" ><input type="submit" value="댓글달기"></td>
+						<td>
+							<button type="button" class="btnReply">댓글</button>
+						</td>
+					</tr>
+				</form>
+			</c:forEach>
+			
+			
+		</table>
+
+
 </div>
+<script>
+$(document).on('click', '.btnReply', function () {
+	$.ajax({
+		url:'comment-comment-insert-ajax.do',
+		type:'GET',
+		dataType:'json',
+		data:'a=1',
+		succcess:function(data){
+			console.log(data);
+		}
+	});
+});
+</script>
 </body>
 </html>

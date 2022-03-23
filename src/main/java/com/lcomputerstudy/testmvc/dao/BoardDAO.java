@@ -179,25 +179,14 @@ public class BoardDAO {
 			}
 			pstmt.close();
 			rs.close();
+			
 			String query2 = "update board set view_count = view_count+1 where b_idx=?";
 			pstmt = conn.prepareStatement(query2);
 			pstmt.setInt(1,b_idx);
 			rs = pstmt.executeQuery();
-			
-			String query3 = "select c_content from comment";
-			pstmt = conn.prepareStatement(query3);
-			//pstmt.setInt(1, b_idx);
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				board.SetComment(rs.getString("comment"));
-				list.add(board);
-			}
-			
-
-			
+	
 		} catch(Exception ex) {
-			System.out.println("SQLException : " + ex.getMessage());
+			ex.printStackTrace();
 		} finally {
 			try {
 				if (rs != null) rs.close();
@@ -210,6 +199,8 @@ public class BoardDAO {
 		}
 		return list;
 	}
+	
+
 	
 	public void modifyUser(Board board) {
 		Connection conn = null;
@@ -301,10 +292,16 @@ public class BoardDAO {
 		PreparedStatement pstmt = null;
 		try {
 			conn = DBConnection.getConnection();
-			String sql = "insert into comment (c_board_idx,c_content) value(?,?)";
+			String sql = "insert into comment (c_board_idx,c_content,c_uidx,c_group,c_order,c_depth) value(?,?,?,0,1,0)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, board.getB_idx());
 			pstmt.setString(2, board.getComment());
+			pstmt.setInt(3, board.getU_idx());
+			pstmt.executeUpdate();
+			pstmt.close();
+			
+			sql = "update comment set c_group = last_insert_id() where c_idx = last_insert_id()";
+			pstmt = conn.prepareStatement(sql);
 			pstmt.executeUpdate();
 			pstmt.close();
 			
@@ -315,6 +312,95 @@ public class BoardDAO {
 				if(pstmt!=null) pstmt.close();
 				if(conn!=null) conn.close();
 			}catch	(SQLException e){
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public ArrayList<Board> getComment(Board board) {
+		Connection conn =null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<Board> comment_list = null;
+		int b_idx = board.getB_idx();
+		
+		try {
+			conn = DBConnection.getConnection();
+			comment_list = new ArrayList<Board>();
+			
+			String query3 = "select * from comment where c_board_idx = ? order by c_order ";
+			pstmt = conn.prepareStatement(query3);
+			pstmt.setInt(1, b_idx);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Board vo = new Board();
+				String count = " ";
+	        	for (int i=0; i<Integer.parseInt(rs.getString("c_depth")); i++) {
+	        		count +="ㄴ";
+	        	}
+	        	
+				vo.SetComment(count+rs.getString("c_content"));
+				vo.setC_idx(Integer.parseInt(rs.getString("c_idx")));
+				vo.setC_board_idx(Integer.parseInt(rs.getString("c_board_idx")));
+				vo.setC_uidx(Integer.parseInt(rs.getString("c_uidx")));
+				vo.setC_group(Integer.parseInt(rs.getString("c_group")));
+				vo.setC_order(Integer.parseInt(rs.getString("c_order")));
+				vo.setC_depth(Integer.parseInt(rs.getString("c_depth")));
+				comment_list.add(vo);
+			}
+			pstmt.close();
+			rs.close();
+			
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return comment_list;
+	}
+	
+	public void insertComment_reply(Board board) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			String sql = "insert into comment (c_board_idx,c_content,c_uidx,c_group,c_order,c_depth) value(?,?,?,?,?,?)";
+			pstmt =conn.prepareStatement(sql);
+			pstmt.setInt(1,board.getC_board_idx());
+			pstmt.setString(2,board.getComment());
+			pstmt.setInt(3,board.getC_uidx());
+			pstmt.setInt(4, board.getC_group());
+			pstmt.setInt(5, board.getC_order());
+			pstmt.setInt(6, board.getC_depth());
+			pstmt.executeUpdate();
+			pstmt.close();
+						
+			sql = "update comment set c_order = c_order+1 where c_group = ? and c_order >= ? and c_idx <> last_insert_id() ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, board.getC_group());
+			pstmt.setInt(2, board.getC_order());
+			pstmt.executeUpdate();
+			pstmt.close();
+			
+			
+		} catch(Exception ex) {
+			System.out.println("SQLException:"+ex.getMessage());
+			ex.printStackTrace();
+		} finally{
+			try {
+				if(pstmt!=null)pstmt.close();
+				if(conn !=null)conn.close();
+			} catch(SQLException e) { 
 				e.printStackTrace();
 			}
 		}

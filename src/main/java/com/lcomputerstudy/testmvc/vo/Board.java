@@ -1,5 +1,4 @@
 package com.lcomputerstudy.testmvc.vo;
-//주석
 public class Board {
 	private String title;
 	private String content;
@@ -13,6 +12,16 @@ public class Board {
 	private int depth;
 	private int order;
 	private String comment;
+	
+	private int c_idx;
+	private int c_board_idx;
+	private int c_uidx;
+	
+
+	private int c_group;
+	private int c_order;
+	private int c_depth;
+	
 	
 	public String getTitle(){
 		return title;
@@ -108,5 +117,56 @@ public class Board {
 	public void SetComment(String comment) {
 		this.comment = comment;
 	}
+
+	
+	public int getC_idx() {
+		return c_idx;
+	}
+
+	public void setC_idx(int c_idx) {
+		this.c_idx = c_idx;
+	}
+
+	public int getC_board_idx() {
+		return c_board_idx;
+	}
+
+	public void setC_board_idx(int c_board_idx) {
+		this.c_board_idx = c_board_idx;
+	}
+	
+	public int getC_uidx() {
+		return c_uidx;
+	}
+
+	public void setC_uidx(int c_uidx) {
+		this.c_uidx = c_uidx;
+	}
+
+	public int getC_group() {
+		return c_group;
+	}
+
+	public void setC_group(int c_group) {
+		this.c_group = c_group;
+	}
+
+	public int getC_order() {
+		return c_order;
+	}
+
+	public void setC_order(int c_order) {
+		this.c_order = c_order;
+	}
+
+	public int getC_depth() {
+		return c_depth;
+	}
+
+	public void setC_depth(int c_depth) {
+		this.c_depth = c_depth;
+	}
+	
+	
 	
 }
