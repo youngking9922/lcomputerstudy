@@ -323,6 +323,7 @@ public class BoardDAO {
 		ResultSet rs = null;
 		ArrayList<Board> comment_list = null;
 		int b_idx = board.getB_idx();
+		int num=0;
 		
 		try {
 			conn = DBConnection.getConnection();
@@ -332,10 +333,12 @@ public class BoardDAO {
 			pstmt = conn.prepareStatement(query3);
 			pstmt.setInt(1, b_idx);
 			rs = pstmt.executeQuery();
-			
+
 			while(rs.next()) {
 				Board vo = new Board();
 				String count = " ";
+				
+				num++;
 	        	for (int i=0; i<Integer.parseInt(rs.getString("c_depth")); i++) {
 	        		count +="ㄴ";
 	        	}
@@ -347,7 +350,10 @@ public class BoardDAO {
 				vo.setC_group(Integer.parseInt(rs.getString("c_group")));
 				vo.setC_order(Integer.parseInt(rs.getString("c_order")));
 				vo.setC_depth(Integer.parseInt(rs.getString("c_depth")));
+				vo.setWriter(rs.getString("c_writer"));
+				vo.setNum(num);
 				comment_list.add(vo);
+				
 			}
 			pstmt.close();
 			rs.close();
@@ -392,6 +398,45 @@ public class BoardDAO {
 			pstmt.executeUpdate();
 			pstmt.close();
 			
+			
+		} catch(Exception ex) {
+			System.out.println("SQLException:"+ex.getMessage());
+			ex.printStackTrace();
+		} finally{
+			try {
+				if(pstmt!=null)pstmt.close();
+				if(conn !=null)conn.close();
+			} catch(SQLException e) { 
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void insertComment_reply_ajax(Board board) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DBConnection.getConnection();
+			String sql = "insert into comment (c_board_idx,c_content,c_uidx,c_writer,c_group,c_order,c_depth) value(?,?,?,?,?,?,?)";
+			pstmt =conn.prepareStatement(sql);
+			pstmt.setInt(1,board.getC_board_idx());
+			pstmt.setString(2,board.getComment());
+			pstmt.setInt(3,board.getC_uidx());
+			pstmt.setString(4, board.getWriter());
+			pstmt.setInt(5, board.getC_group());
+			pstmt.setInt(6, board.getC_order());
+			pstmt.setInt(7, board.getC_depth());
+			pstmt.executeUpdate();
+			pstmt.close();
+			
+			sql = "update comment set c_order = c_order+1 where c_group = ? and c_order >= ? and c_idx <> last_insert_id() ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, board.getC_group());
+			pstmt.setInt(2, board.getC_order());
+			pstmt.executeUpdate();
+			pstmt.close();
+						
 			
 		} catch(Exception ex) {
 			System.out.println("SQLException:"+ex.getMessage());

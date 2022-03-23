@@ -235,11 +235,17 @@ public class controller extends HttpServlet {
 				boardService.insertComment_reply(board);
 				view = "board/list";
 				break;
-			case "comment-comment-insert-ajax.do":
+			case "/comment-comment-insert-ajax.do":
 				board = new Board();
 				boardService= BoardService.getInstance();
-				board.setC_board_idx(Integer.parseInt(request.getParameter("a")));
-				
+				board.setC_board_idx(Integer.parseInt(request.getParameter("c_board_idx")));
+				board.SetComment(request.getParameter("c_content"));
+				board.setC_uidx(Integer.parseInt(request.getParameter("c_uidx")));
+				board.setWriter(request.getParameter("c_writer"));
+				board.setC_group(Integer.parseInt(request.getParameter("c_group")));
+				board.setC_order(Integer.parseInt(request.getParameter("c_order"))+1);
+				board.setC_depth(Integer.parseInt(request.getParameter("c_depth"))+1);
+				boardService.insertComment_reply_ajax(board);
 				view = "board/list";
 				break;
 		}

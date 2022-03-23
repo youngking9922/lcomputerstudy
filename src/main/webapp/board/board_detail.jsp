@@ -112,39 +112,59 @@
 				<th>댓글</th>
 				<td>작성자</td>
 				<td>댓글의 댓글달기</td>
-				<td>댓글</td>
 			</tr>
 			
 			<c:forEach items="${comment_list}" var="comment_item" varStatus="status">
-				<form action="comment-comment-insert.do"name="form_comment" method="post">
-						<input type="hidden" name="c_board_idx" value="${comment_item.c_board_idx}">
-						<input type="hidden" name="c_uidx" value="${sessionScope.user.u_idx}">
-						<input type="hidden" name="c_group" value="${comment_item.c_group}">
-						<input type="hidden" name="c_order" value="${comment_item.c_order}">
-						<input type="hidden" name="c_depth" value="${comment_item.c_depth}">	
-					<tr>
-						<td>${comment_item.comment}</td>
-						<td>${comment_item.c_uidx}</td>
-						<td><input type = "text" name="c_content" ><input type="submit" value="댓글달기"></td>
-						<td>
-							<button type="button" class="btnReply">댓글</button>
-						</td>
-					</tr>
-				</form>
+					<td><input type="hidden" name="c_board_idx" value="${comment_item.c_board_idx}"></td>
+					<td><input type="hidden" name="c_uidx" value="${sessionScope.user.u_idx}"></td>
+					<td><input type="hidden" name="c_writer" value="${sessionScope.user.u_name}"></td>
+					<td><input type="hidden" name="c_group" value="${comment_item.c_group}"></td>
+					<td><input type="hidden" name="c_order" value="${comment_item.c_order}"></td>
+					<td><input type="hidden" name="c_depth" value="${comment_item.c_depth}">	</td>
+				<tr>
+					<td>${comment_item.comment}</td>
+					<td>${comment_item.writer}</td>
+					<td class ="show_content${comment_item.num}" style="display:none"><input type = "text" name="c_content" value=""></td>
+					<td><button type="button" name = "${comment_item.num}" class="Replyshow_btn ${comment_item.num}">댓글보기</button></td>
+					<td><button type="button" class="btnReply${comment_item.num}">댓글</button></td>
+				</tr>
 			</c:forEach>
-			
-			
 		</table>
 
 
 </div>
 <script>
+
+$(document).on('click', '.Replyshow_btn', function () {
+	var name_by_class = $(this).attr('name');
+	console.log(name_by_class);
+	$('.show_content'+name_by_class).attr('style', "display:block;");  
+});
+
+
+
 $(document).on('click', '.btnReply', function () {
+	
+	c_board_idx = $('input[name=c_board_idx]').val();
+	c_content = $('input[name=c_content]').val();
+	c_uidx = $('input[name=c_uidx]').val();
+	c_writer = $('input[name=c_writer]').val();
+	c_group = $('input[name=c_group]').val();
+	c_order = $('input[name=c_order]').val();
+	c_depth = $('input[name=c_depth]').val();
+	
 	$.ajax({
 		url:'comment-comment-insert-ajax.do',
 		type:'GET',
 		dataType:'json',
-		data:'a=1',
+		data:{ c_board_idx : c_board_idx,
+			c_content : c_content,
+			c_uidx : c_uidx,
+			c_writer : c_writer,
+			c_group : c_group,
+			c_order : c_order,
+			c_depth : c_depth,
+			 },
 		succcess:function(data){
 			console.log(data);
 		}

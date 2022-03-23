@@ -17,10 +17,10 @@ public class Board {
 	private int c_board_idx;
 	private int c_uidx;
 	
-
 	private int c_group;
 	private int c_order;
 	private int c_depth;
+	private int num;
 	
 	
 	public String getTitle(){
@@ -167,6 +167,13 @@ public class Board {
 		this.c_depth = c_depth;
 	}
 	
+	public int getNum() {
+		return num;
+	}
+
+	public void setNum(int num) {
+		this.num = num;
+	}
 	
 	
 }

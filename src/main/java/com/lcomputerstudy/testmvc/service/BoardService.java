@@ -60,5 +60,9 @@ public class BoardService {
 		dao.insertComment_reply(board);
 	}
 	
+	public void insertComment_reply_ajax(Board board) {
+		dao.insertComment_reply_ajax(board);
+	}
+	
 	
 }
