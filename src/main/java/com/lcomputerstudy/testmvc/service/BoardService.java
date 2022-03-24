@@ -56,12 +56,12 @@ public class BoardService {
 		return dao.getComment(board);
 	}
 	
-	public void insertComment_reply(Board board) {
-		dao.insertComment_reply(board);
-	}
-	
 	public void insertComment_reply_ajax(Board board) {
 		dao.insertComment_reply_ajax(board);
+	}
+	
+	public ArrayList<Board> searchBoard(Board board) {
+		return dao.searchBoard(board);
 	}
 	
 	

@@ -5,12 +5,18 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <title>게시글 목록</title>
 </head>
 <style>
+	body {
+		margin:0;
+	}
 	table {
+		width:90%;
+		text-align:center;
 		border-collapse:collapse;
-		margin:40px auto;
+		margin:10px auto auto auto;
 	}
 	table tr th {
 		font-weight:700;
@@ -43,16 +49,42 @@
 		margin: 0 5px;
 		border-radius:5px;
 	}
+	.top {
+		width:100%;
+		margin:0 20px 0 0 ;
+		display:inline-block;
+	}
 	.write_btn{
-		width:10%;
-		margin:0 auto;
+		margin: 0 0 0 5%;
+		width:20%;
 		text-align:center;
 		border:1px solid #ededed;
+		float:left;
+		display:inline-block;
 	}
+	.search {
+		margin: 0 5% 0 0 ;
+		width:60%;
+		float:right;
+		text-align:right;
+		display:inline-block;
+	 }
 </style>
 <body>
 	<h1>게시글 목록</h1>
-	<div class="write_btn"><a href="board-write.do">글쓰기</a></div>
+
+	<div class="top">
+		<div class="write_btn"><a href="board-write.do">글쓰기</a></div>
+		<div class="search">
+			<select name="search_option">
+				<option value="1" selected>제목</option>
+				<option value="2">제목+내용</option>
+				<option value="3">작성자</option>
+			</select>
+			<input type="text" name="search_txt" size="40"><button class="search_btn"type="button">검색</button>
+		</div>
+	</div>
+
 		<table>
 			<tr>
 				<th>No</th>
@@ -71,6 +103,7 @@
 				</tr>
 			</c:forEach>
 		</table>
+		
 	<div>
 		<ul>
 			 <c:choose>
@@ -108,4 +141,26 @@
 		</ul>
 	</div>
 </body>
+
+<script>
+$(document).on('click', '.search_btn', function () {
+	search_option = $("select[name=search_option]").val();
+	search_txt = $("input[name=search_txt]").val();
+	console.log(search_option);
+	console.log(search_txt);
+	$.ajax({
+		url:'board-search.do',
+		type:'GET',
+		dataType:'html',
+		data:{ search_option : search_option,
+			search_txt : search_txt,
+		}
+	})
+	
+	.done(function (data) {
+		console.log(data);
+	});
+	
+});
+</script>
 </html>

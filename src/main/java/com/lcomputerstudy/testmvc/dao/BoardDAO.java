@@ -292,11 +292,15 @@ public class BoardDAO {
 		PreparedStatement pstmt = null;
 		try {
 			conn = DBConnection.getConnection();
-			String sql = "insert into comment (c_board_idx,c_content,c_uidx,c_group,c_order,c_depth) value(?,?,?,0,1,0)";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, board.getB_idx());
-			pstmt.setString(2, board.getComment());
-			pstmt.setInt(3, board.getU_idx());
+			String sql = "insert into comment (c_board_idx,c_content,c_uidx,c_writer,c_group,c_order,c_depth) value(?,?,?,?,?,?,?)";
+			pstmt =conn.prepareStatement(sql);
+			pstmt.setInt(1,board.getC_board_idx());
+			pstmt.setString(2,board.getComment());
+			pstmt.setInt(3,board.getC_uidx());
+			pstmt.setString(4, board.getWriter());
+			pstmt.setInt(5, board.getC_group());
+			pstmt.setInt(6, board.getC_order());
+			pstmt.setInt(7, board.getC_depth());
 			pstmt.executeUpdate();
 			pstmt.close();
 			
@@ -374,44 +378,6 @@ public class BoardDAO {
 		return comment_list;
 	}
 	
-	public void insertComment_reply(Board board) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		
-		try {
-			conn = DBConnection.getConnection();
-			String sql = "insert into comment (c_board_idx,c_content,c_uidx,c_group,c_order,c_depth) value(?,?,?,?,?,?)";
-			pstmt =conn.prepareStatement(sql);
-			pstmt.setInt(1,board.getC_board_idx());
-			pstmt.setString(2,board.getComment());
-			pstmt.setInt(3,board.getC_uidx());
-			pstmt.setInt(4, board.getC_group());
-			pstmt.setInt(5, board.getC_order());
-			pstmt.setInt(6, board.getC_depth());
-			pstmt.executeUpdate();
-			pstmt.close();
-						
-			sql = "update comment set c_order = c_order+1 where c_group = ? and c_order >= ? and c_idx <> last_insert_id() ";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, board.getC_group());
-			pstmt.setInt(2, board.getC_order());
-			pstmt.executeUpdate();
-			pstmt.close();
-			
-			
-		} catch(Exception ex) {
-			System.out.println("SQLException:"+ex.getMessage());
-			ex.printStackTrace();
-		} finally{
-			try {
-				if(pstmt!=null)pstmt.close();
-				if(conn !=null)conn.close();
-			} catch(SQLException e) { 
-				e.printStackTrace();
-			}
-		}
-	}
-	
 	public void insertComment_reply_ajax(Board board) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -450,4 +416,51 @@ public class BoardDAO {
 			}
 		}
 	}
+	
+	public ArrayList<Board> searchBoard(Board board) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int option = board.getBoard_search_option();
+		ArrayList<Board> searchList = null;
+		ResultSet rs= null;
+		
+		try {
+			searchList = new ArrayList<Board>();
+			Board se = new Board();
+			
+			if (option==1) {
+				conn = DBConnection.getConnection();
+				String sql = "select * from board where b_title = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, board.getBoard_serarch_txt());
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					se.setB_idx(Integer.parseInt(rs.getString("b_idx")));
+					se.setTitle(rs.getString("b_title"));
+					se.setDate(rs.getString("b_date"));
+					se.setWriter(rs.getString("b_writer"));
+					se.setView_count(Integer.parseInt(rs.getString("view_count")));
+				}
+				pstmt.close();
+			}
+			if (option==2) {
+							
+			}
+			if (option==3) {
+				
+			}
+			
+		} catch (Exception ex){
+			ex.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null)pstmt.close();
+				if(conn!=null)conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return searchList;
+	}	
 }

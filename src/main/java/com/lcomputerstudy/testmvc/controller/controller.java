@@ -49,6 +49,9 @@ public class controller extends HttpServlet {
 		
 		HttpSession session = null;
 		BoardService boardService = null;
+		
+		ArrayList<Board> comment_list = null;
+		ArrayList<Board> search_list = null;
 				
 		command = checkSession(request,response,command);
 
@@ -158,7 +161,7 @@ public class controller extends HttpServlet {
 				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
 				boardService = BoardService.getInstance();
 				ArrayList<Board> list2 = boardService.getInfo(board); 
-				ArrayList<Board> comment_list = boardService.getComment(board);
+				comment_list = boardService.getComment(board);
 				request.setAttribute("list", list2);
 				request.setAttribute("comment_list", comment_list);
 				view = "board/board_detail";
@@ -194,13 +197,10 @@ public class controller extends HttpServlet {
 				board.setGroup(Integer.parseInt(request.getParameter("group")));
 				board.setDepth(Integer.parseInt(request.getParameter("depth")));
 				board.setOrder(Integer.parseInt(request.getParameter("order")));
-								
 				request.setAttribute("board", board);
 				view = "board/write_reply";
 				break;
-				
 			case "/board-reply-insert-process.do":
-				
 				board = new Board();
 				boardService = BoardService.getInstance();
 				board.setTitle(request.getParameter("title"));
@@ -217,27 +217,25 @@ public class controller extends HttpServlet {
 			case "/board-comment-insert.do":
 				board = new Board();
 				boardService = BoardService.getInstance();
-				board.SetComment(request.getParameter("comment"));
-				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
-				board.setU_idx(Integer.parseInt(request.getParameter("u_idx")));
-				boardService.insertComment(board);
-				view = "board/list";
-				break;
-			case "/comment-comment-insert.do":
-				board = new Board();
-				boardService= BoardService.getInstance();
+				board.setB_idx(Integer.parseInt(request.getParameter("c_board_idx")));
 				board.setC_board_idx(Integer.parseInt(request.getParameter("c_board_idx")));
 				board.SetComment(request.getParameter("c_content"));
 				board.setC_uidx(Integer.parseInt(request.getParameter("c_uidx")));
+				board.setWriter(request.getParameter("c_writer"));
 				board.setC_group(Integer.parseInt(request.getParameter("c_group")));
 				board.setC_order(Integer.parseInt(request.getParameter("c_order"))+1);
-				board.setC_depth(Integer.parseInt(request.getParameter("c_depth"))+1);
-				boardService.insertComment_reply(board);
-				view = "board/list";
+				board.setC_depth(Integer.parseInt(request.getParameter("c_depth")));
+				boardService.insertComment(board);
+				
+				comment_list = boardService.getComment(board);
+				request.setAttribute("comment_list", comment_list);
+				
+				view = "board/aj-comment-list";
 				break;
 			case "/comment-comment-insert-ajax.do":
 				board = new Board();
 				boardService= BoardService.getInstance();
+				board.setB_idx(Integer.parseInt(request.getParameter("c_board_idx")));
 				board.setC_board_idx(Integer.parseInt(request.getParameter("c_board_idx")));
 				board.SetComment(request.getParameter("c_content"));
 				board.setC_uidx(Integer.parseInt(request.getParameter("c_uidx")));
@@ -246,8 +244,22 @@ public class controller extends HttpServlet {
 				board.setC_order(Integer.parseInt(request.getParameter("c_order"))+1);
 				board.setC_depth(Integer.parseInt(request.getParameter("c_depth"))+1);
 				boardService.insertComment_reply_ajax(board);
-				view = "board/list";
+				
+				comment_list = boardService.getComment(board);
+				request.setAttribute("comment_list", comment_list);
+				
+				view = "board/aj-comment-list";
 				break;
+			case "/board-search.do":
+				board = new Board();
+				boardService = BoardService.getInstance();
+				board.setBoard_search_option(Integer.parseInt(request.getParameter("search_option")));
+				board.setBoard_serarch_txt(request.getParameter("search_txt"));
+				boardService.searchBoard(board);
+				
+				search_list = boardService.searchBoard(board);
+				
+			break;
 		}
 		RequestDispatcher rd = request.getRequestDispatcher(view+".jsp");
 		rd.forward(request, response);

@@ -11,18 +11,22 @@ public class Board {
 	private int group;
 	private int depth;
 	private int order;
-	private String comment;
 	
+	private String comment;	
 	private int c_idx;
 	private int c_board_idx;
 	private int c_uidx;
-	
 	private int c_group;
 	private int c_order;
 	private int c_depth;
 	private int num;
 	
+	private int board_search_option;
+	private String board_serarch_txt;
 	
+
+	
+
 	public String getTitle(){
 		return title;
 	}
@@ -173,6 +177,22 @@ public class Board {
 
 	public void setNum(int num) {
 		this.num = num;
+	}
+	
+	public int getBoard_search_option() {
+		return board_search_option;
+	}
+
+	public void setBoard_search_option(int board_search_option) {
+		this.board_search_option = board_search_option;
+	}
+	
+	public String getBoard_serarch_txt() {
+		return board_serarch_txt;
+	}
+
+	public void setBoard_serarch_txt(String board_serarch_txt) {
+		this.board_serarch_txt = board_serarch_txt;
 	}
 	
 	

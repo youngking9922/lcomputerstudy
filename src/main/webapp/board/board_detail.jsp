@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -88,25 +88,26 @@
 			</tr>		
 		</table>
 		
-
-	<ul>
-		<li><a href="board-modify.do?b_idx=${item.b_idx}">수정</a></li>
-		<li><a href="board-delete-process.do?b_idx=${item.b_idx}">삭제</a></li>
-		<li><a href="board-list.do">목록</a></li>
-		<li><a href="board-write-reply.do?group=${item.group}&depth=${item.depth}&order=${item.order}">답글달기</a></li>
-	</ul>
+		<ul>
+			<li><a href="board-modify.do?b_idx=${item.b_idx}">수정</a></li>
+			<li><a href="board-delete-process.do?b_idx=${item.b_idx}">삭제</a></li>
+			<li><a href="board-list.do">목록</a></li>
+			<li><a href="board-write-reply.do?group=${item.group}&depth=${item.depth}&order=${item.order}">답글달기</a></li>
+		</ul>
 	
-	<form action="board-comment-insert.do"name="form_comment" method="post">
 		<div class="comment">
 			<input type="text" name="comment" size="40" value="">
 			<input type="hidden" name="b_idx" value="${item.b_idx}">
 			<input type="hidden" name= "u_idx" value="${item.u_idx}">
-			<input type="submit" class="insert_comment_btn" value="댓글달기">
+			<input type="hidden" name="c_writer" value="${sessionScope.user.u_name}">
+			<input type="hidden" name="c_group" value="0">
+			<input type="hidden" name="c_order" value="0">
+			<input type="hidden" name="c_depth" value="0">
+			<button  class="insert_comment_btn" type="button">댓글달기</button>
 		</div>
-	</form>
 	</c:forEach>
 	
-	
+	<div id="commentList">
 		<table>
 			<tr>
 				<th>댓글</th>
@@ -115,48 +116,53 @@
 			</tr>
 			
 			<c:forEach items="${comment_list}" var="comment_item" varStatus="status">
-					<td><input type="hidden" name="c_board_idx" value="${comment_item.c_board_idx}"></td>
-					<td><input type="hidden" name="c_uidx" value="${sessionScope.user.u_idx}"></td>
-					<td><input type="hidden" name="c_writer" value="${sessionScope.user.u_name}"></td>
-					<td><input type="hidden" name="c_group" value="${comment_item.c_group}"></td>
-					<td><input type="hidden" name="c_order" value="${comment_item.c_order}"></td>
-					<td><input type="hidden" name="c_depth" value="${comment_item.c_depth}">	</td>
+					<input type="hidden" name="c_board_idx${comment_item.num}" value="${comment_item.c_board_idx}">
+					<input type="hidden" name="c_uidx${comment_item.num}" value="${sessionScope.user.u_idx}">
+					<input type="hidden" name="c_writer${comment_item.num}" value="${sessionScope.user.u_name}">
+					<input type="hidden" name="c_group${comment_item.num}" value="${comment_item.c_group}">
+					<input type="hidden" name="c_order${comment_item.num}" value="${comment_item.c_order}">
+					<input type="hidden" name="c_depth${comment_item.num}" value="${comment_item.c_depth}">
 				<tr>
 					<td>${comment_item.comment}</td>
 					<td>${comment_item.writer}</td>
-					<td class ="show_content${comment_item.num}" style="display:none"><input type = "text" name="c_content" value=""></td>
-					<td><button type="button" name = "${comment_item.num}" class="Replyshow_btn ${comment_item.num}">댓글보기</button></td>
-					<td><button type="button" class="btnReply${comment_item.num}">댓글</button></td>
+					<td><button type="button" name = "${comment_item.num}" class="Replyshow_btn ${comment_item.num}">열기</button>
+						<button type="button" name = "${comment_item.num}" class="Replyhide_btn">닫기</button>
+					</td>
+				</tr>
+				<tr>
+					<td colspan = '2' class ="show_content${comment_item.num}" style="display:none"><input type = "text" name="c_content${comment_item.num}" value=""></td>
+					<td class ="show_content${comment_item.num}" style="display:none"><button type="button" name = "${comment_item.num}"  class="btnReply ${comment_item.num}">댓글달기</button></td>
 				</tr>
 			</c:forEach>
 		</table>
-
+	</div>
 
 </div>
 <script>
 
 $(document).on('click', '.Replyshow_btn', function () {
 	var name_by_class = $(this).attr('name');
-	console.log(name_by_class);
-	$('.show_content'+name_by_class).attr('style', "display:block;");  
+	$('.show_content'+name_by_class).attr('style', "display:'';");  
 });
 
 
+$(document).on('click', '.Replyhide_btn', function () {
+	var name_by_class = $(this).attr('name');
+	$('.show_content'+name_by_class).attr('style', "display:none;");  
+});
 
-$(document).on('click', '.btnReply', function () {
-	
-	c_board_idx = $('input[name=c_board_idx]').val();
-	c_content = $('input[name=c_content]').val();
-	c_uidx = $('input[name=c_uidx]').val();
-	c_writer = $('input[name=c_writer]').val();
-	c_group = $('input[name=c_group]').val();
-	c_order = $('input[name=c_order]').val();
-	c_depth = $('input[name=c_depth]').val();
-	
+$(document).on('click', '.insert_comment_btn', function () {
+	c_board_idx = $("input[name=b_idx]").val();
+	c_content = $("input[name=comment").val();
+	c_uidx = $("input[name=u_idx").val();
+	c_writer = $("input[name=c_writer").val();
+	c_group = $("input[name=c_group").val();
+	c_order = $("input[name=c_order").val();
+	c_depth = $("input[name=c_depth").val();
 	$.ajax({
-		url:'comment-comment-insert-ajax.do',
-		type:'GET',
-		dataType:'json',
+		url:'board-comment-insert.do',
+		type:'POST',
+		dataType:'html',
 		data:{ c_board_idx : c_board_idx,
 			c_content : c_content,
 			c_uidx : c_uidx,
@@ -164,10 +170,39 @@ $(document).on('click', '.btnReply', function () {
 			c_group : c_group,
 			c_order : c_order,
 			c_depth : c_depth,
-			 },
-		succcess:function(data){
-			console.log(data);
 		}
+	})
+	.done(function (data) {
+		$('#commentList').html(data);
+	});
+});
+
+$(document).on('click', '.btnReply', function () {
+	var name_by_class = $(this).attr('name');
+	c_board_idx = $("input[name=c_board_idx"+name_by_class+"]").val();
+	c_content = $("input[name=c_content"+name_by_class+"]").val();
+	c_uidx = $("input[name=c_uidx"+name_by_class+"]").val();
+	c_writer = $("input[name=c_writer"+name_by_class+"]").val();
+	c_group = $("input[name=c_group"+name_by_class+"]").val();
+	c_order = $("input[name=c_order"+name_by_class+"]").val();
+	c_depth = $("input[name=c_depth"+name_by_class+"]").val();
+	
+	$.ajax({
+		url:'comment-comment-insert-ajax.do',
+		type:'POST',
+		dataType:'html',
+		data:{ c_board_idx : c_board_idx,
+			c_content : c_content,
+			c_uidx : c_uidx,
+			c_writer : c_writer,
+			c_group : c_group,
+			c_order : c_order,
+			c_depth : c_depth,
+		}
+	})
+	.done(function (data) {
+		console.log(data);
+		//$('#commentList').html(data);
 	});
 });
 </script>
