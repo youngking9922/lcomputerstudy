@@ -258,7 +258,8 @@ public class controller extends HttpServlet {
 				boardService.searchBoard(board);
 				
 				search_list = boardService.searchBoard(board);
-				
+				request.setAttribute("search_list",search_list);
+				view = "board/aj-search-list";
 			break;
 		}
 		RequestDispatcher rd = request.getRequestDispatcher(view+".jsp");

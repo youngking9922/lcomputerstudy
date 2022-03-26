@@ -84,7 +84,8 @@
 			<input type="text" name="search_txt" size="40"><button class="search_btn"type="button">검색</button>
 		</div>
 	</div>
-
+	
+	<div id = "search_list">
 		<table>
 			<tr>
 				<th>No</th>
@@ -103,7 +104,8 @@
 				</tr>
 			</c:forEach>
 		</table>
-		
+	</div>	
+	
 	<div>
 		<ul>
 			 <c:choose>
@@ -150,7 +152,7 @@ $(document).on('click', '.search_btn', function () {
 	console.log(search_txt);
 	$.ajax({
 		url:'board-search.do',
-		type:'GET',
+		type:'post',
 		dataType:'html',
 		data:{ search_option : search_option,
 			search_txt : search_txt,
@@ -158,7 +160,7 @@ $(document).on('click', '.search_btn', function () {
 	})
 	
 	.done(function (data) {
-		console.log(data);
+		$('#search_list').html(data);
 	});
 	
 });

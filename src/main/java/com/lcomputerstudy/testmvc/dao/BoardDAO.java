@@ -426,29 +426,62 @@ public class BoardDAO {
 		
 		try {
 			searchList = new ArrayList<Board>();
-			Board se = new Board();
+			conn = DBConnection.getConnection();
 			
 			if (option==1) {
-				conn = DBConnection.getConnection();
-				String sql = "select * from board where b_title = ?";
+				String sql = "select * from board where b_title like ? ";
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, board.getBoard_serarch_txt());
+				pstmt.setString(1, "%"+board.getBoard_serarch_txt()+"%");
 				rs = pstmt.executeQuery();
 				
 				while(rs.next()) {
+					Board se = new Board();
 					se.setB_idx(Integer.parseInt(rs.getString("b_idx")));
 					se.setTitle(rs.getString("b_title"));
 					se.setDate(rs.getString("b_date"));
 					se.setWriter(rs.getString("b_writer"));
 					se.setView_count(Integer.parseInt(rs.getString("view_count")));
+					searchList.add(se);
 				}
 				pstmt.close();
+				rs.close();
 			}
 			if (option==2) {
-							
+				String sql = "select * from board where b_title like ? or b_content like ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%"+board.getBoard_serarch_txt()+"%");
+				pstmt.setString(2, "%"+board.getBoard_serarch_txt()+"%");
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					Board se = new Board();
+					se.setB_idx(Integer.parseInt(rs.getString("b_idx")));
+					se.setTitle(rs.getString("b_title"));
+					se.setDate(rs.getString("b_date"));
+					se.setWriter(rs.getString("b_writer"));
+					se.setView_count(Integer.parseInt(rs.getString("view_count")));
+					searchList.add(se);
+				}
+				pstmt.close();
+				rs.close();		
 			}
 			if (option==3) {
+				String sql = "select * from board where b_writer like ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%"+board.getBoard_serarch_txt()+"%");
+				rs = pstmt.executeQuery();
 				
+				while(rs.next()) {
+					Board se = new Board();
+					se.setB_idx(Integer.parseInt(rs.getString("b_idx")));
+					se.setTitle(rs.getString("b_title"));
+					se.setDate(rs.getString("b_date"));
+					se.setWriter(rs.getString("b_writer"));
+					se.setView_count(Integer.parseInt(rs.getString("view_count")));
+					searchList.add(se);
+				}
+				pstmt.close();
+				rs.close();		
 			}
 			
 		} catch (Exception ex){

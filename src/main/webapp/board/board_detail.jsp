@@ -201,8 +201,8 @@ $(document).on('click', '.btnReply', function () {
 		}
 	})
 	.done(function (data) {
-		console.log(data);
-		//$('#commentList').html(data);
+		
+		$('#commentList').html(data);
 	});
 });
 </script>
