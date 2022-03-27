@@ -104,9 +104,7 @@
 				</tr>
 			</c:forEach>
 		</table>
-	</div>	
-	
-	<div>
+
 		<ul>
 			 <c:choose>
 				<c:when test="${ pagination.prevPage >= 1}">

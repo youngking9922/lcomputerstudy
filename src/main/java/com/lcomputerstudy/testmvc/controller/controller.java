@@ -259,7 +259,23 @@ public class controller extends HttpServlet {
 				
 				search_list = boardService.searchBoard(board);
 				request.setAttribute("search_list",search_list);
+				
+				String reqPage3 = request.getParameter("page");
+				if (reqPage3 != null)
+					page = Integer.parseInt(reqPage3);
+				
+				boardService = BoardService.getInstance();
+				boardcount = BoardService.getBoardCount();
+				
+				Pagination pagination3 = new Pagination();
+				pagination3.setCount(boardcount);
+				pagination3.setPage(page);
+				pagination3.init();
+				boardService.getBoard(pagination3);
+				
+				request.setAttribute("pagination", pagination3);
 				view = "board/aj-search-list";
+				
 			break;
 		}
 		RequestDispatcher rd = request.getRequestDispatcher(view+".jsp");
