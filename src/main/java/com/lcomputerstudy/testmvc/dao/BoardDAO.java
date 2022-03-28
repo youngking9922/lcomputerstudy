@@ -442,7 +442,7 @@ public class BoardDAO {
 				rs.close();
 			}
 			if (option==2) {
-				String query = "select * from board where b_title like ? or b_content like ?";
+				String query = "SELECT COUNT(*) count from board where b_title like ? or b_content like ?";
 				pstmt = conn.prepareStatement(query);
 				pstmt.setString(1, "%"+search.getKeyword()+"%");
 				pstmt.setString(2, "%"+search.getKeyword()+"%");
@@ -455,7 +455,7 @@ public class BoardDAO {
 				rs.close();
 			}
 			if (option==3) {
-				String query = "select * from board where b_writer like ?";
+				String query = "SELECT COUNT(*) count from board where b_writer like ?";
 				pstmt = conn.prepareStatement(query);
 				pstmt.setString(1, "%"+search.getKeyword()+"%");
 				rs = pstmt.executeQuery();
@@ -519,9 +519,23 @@ public class BoardDAO {
 			
 	       	pstmt = conn.prepareStatement(query);
 	       	pstmt.setInt(1, pageNum);
-	       	pstmt.setString(2, "%"+search_txt+"%");
-	       	pstmt.setInt(3, pageNum);
-	       	pstmt.setInt(4, Pagination.perPage);
+		    if(option==1) {
+	       		pstmt.setString(2, "%"+search_txt+"%");
+	       		pstmt.setInt(3, pageNum);
+		       	pstmt.setInt(4, Pagination.perPage);
+	       	}
+	    	if(option==2) {
+	       		pstmt.setString(2, "%"+search_txt+"%");
+	       		pstmt.setString(3, "%"+search_txt+"%");
+	       		pstmt.setInt(4, pageNum);
+		       	pstmt.setInt(5, Pagination.perPage);
+	       	}
+	    	if(option==3) {
+	       		pstmt.setString(2, "%"+search_txt+"%");
+	       		pstmt.setInt(3, pageNum);
+		       	pstmt.setInt(4, Pagination.perPage);
+	       	}
+	       	
 	        rs = pstmt.executeQuery();
 	        search_list = new ArrayList<Board>();
 	     

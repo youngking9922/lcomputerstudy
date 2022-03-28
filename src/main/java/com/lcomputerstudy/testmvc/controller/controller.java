@@ -256,11 +256,10 @@ public class controller extends HttpServlet {
 				Search search = new Search();
 				
 				boardService = BoardService.getInstance();
-				searchcount = BoardService.getSelectBoardCount(search);
-				
 				search.setType(Integer.parseInt(request.getParameter("search_option")));
 				search.setKeyword(request.getParameter("search_txt"));
-
+				
+				searchcount = BoardService.getSelectBoardCount(search);
 				String reqPage3 = request.getParameter("page");
 				if (reqPage3 != null)
 					page = Integer.parseInt(reqPage3);
@@ -269,6 +268,8 @@ public class controller extends HttpServlet {
 				pagination3.setCount(searchcount);
 				pagination3.setPage(page);
 				pagination3.setSearch(search);
+				pagination3.setSearch_type(Integer.parseInt(request.getParameter("search_option")));
+				pagination3.setSearch_txt(request.getParameter("search_txt"));
 				pagination3.init();
 				
 				search_list = boardService.searchBoard(pagination3);
@@ -276,8 +277,34 @@ public class controller extends HttpServlet {
 				request.setAttribute("search_list",search_list);
 				request.setAttribute("pagination", pagination3);
 				view = "board/aj-search-list";
-				
 			break;
+			case "/board-search-pagination.do":
+				Search search2 = new Search();
+				
+				boardService = BoardService.getInstance();
+				search2.setType(Integer.parseInt(request.getParameter("search_option")));
+				search2.setKeyword(request.getParameter("search_txt"));
+				
+				searchcount = BoardService.getSelectBoardCount(search2);
+				String page1 = request.getParameter("page");
+				if (page1 != null)
+					page = Integer.parseInt(page1);
+
+				Pagination pagination4 = new Pagination();
+				pagination4.setCount(searchcount);
+				pagination4.setPage(page);
+				pagination4.setSearch(search2);
+				pagination4.setSearch_type(Integer.parseInt(request.getParameter("search_option")));
+				pagination4.setSearch_txt(request.getParameter("search_txt"));
+				pagination4.init();
+				
+				search_list = boardService.searchBoard(pagination4);
+				
+				request.setAttribute("search_list",search_list);
+				request.setAttribute("pagination", pagination4);
+				view = "board/aj-search-list";
+			break;
+
 		}
 		RequestDispatcher rd = request.getRequestDispatcher(view+".jsp");
 		rd.forward(request, response);

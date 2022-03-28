@@ -12,6 +12,8 @@ public class Pagination {
 	public static final int pageUnit=3;  
 	public static final int perPage=3;   
 	private Search search;
+	int search_type;
+	String search_txt;
 	
 	
 	public Pagination() {
@@ -87,6 +89,19 @@ public class Pagination {
 	}
 	public void setSearch(Search search) {
 		this.search = search;
+	}
+	
+	public int getSearch_type() {
+		return search_type;
+	}
+	public void setSearch_type(int search_type) {
+		this.search_type = search_type;
+	}
+	public String getSearch_txt() {
+		return search_txt;
+	}
+	public void setSearch_txt(String search_txt) {
+		this.search_txt = search_txt;
 	}
 	
 }

@@ -25,7 +25,7 @@
 			 <c:choose>
 				<c:when test="${ pagination.prevPage >= 1}">
 					<li>
-						<a href="board-list.do?page=${pagination.prevPage}">
+						<a href="board-search.do?page=${pagination.prevPage}">
 							◀
 						</a>
 					</li>
@@ -42,7 +42,7 @@
 						</c:when>
 						<c:when test="${ pagination.page ne i }">
 							<li>
-								<a href="board-list.do?page=${i}">${i}</a>
+								<a href="board-search-pagination.do?page=${i}&search_option=${pagination.search_type}&search_txt=${pagination.search_txt}">${i}</a>
 							</li>
 						</c:when>
 					</c:choose>
@@ -50,7 +50,7 @@
 			 <c:choose>
 				<c:when test="${ pagination.nextPage <= pagination.lastPage }">
 					<li style="">
-						<a href="board-list.do?page=${pagination.nextPage}">▶</a>
+						<a href="board-search.do?page=${pagination.nextPage}">▶</a>
 					</li>
 				</c:when>
 			</c:choose> 
