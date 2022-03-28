@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import com.lcomputerstudy.testmvc.service.UserService;
 import com.lcomputerstudy.testmvc.vo.Pagination;
+import com.lcomputerstudy.testmvc.vo.Search;
 import com.lcomputerstudy.testmvc.vo.User;
 
 import com.lcomputerstudy.testmvc.vo.Board;
@@ -37,6 +38,7 @@ public class controller extends HttpServlet {
 		
 		int usercount = 0;
 		int boardcount =0;
+		int searchcount = 0;
 		response.setContentType("text/html; charset=utf-8");
 		request.setCharacterEncoding("utf-8");
 		
@@ -251,28 +253,27 @@ public class controller extends HttpServlet {
 				view = "board/aj-comment-list";
 				break;
 			case "/board-search.do":
-				board = new Board();
+				Search search = new Search();
+				
 				boardService = BoardService.getInstance();
-				board.setBoard_search_option(Integer.parseInt(request.getParameter("search_option")));
-				board.setBoard_serarch_txt(request.getParameter("search_txt"));
-				boardService.searchBoard(board);
+				searchcount = BoardService.getSelectBoardCount(search);
 				
-				search_list = boardService.searchBoard(board);
-				request.setAttribute("search_list",search_list);
-				
+				search.setType(Integer.parseInt(request.getParameter("search_option")));
+				search.setKeyword(request.getParameter("search_txt"));
+
 				String reqPage3 = request.getParameter("page");
 				if (reqPage3 != null)
 					page = Integer.parseInt(reqPage3);
-				
-				boardService = BoardService.getInstance();
-				boardcount = BoardService.getBoardCount();
-				
+
 				Pagination pagination3 = new Pagination();
-				pagination3.setCount(boardcount);
+				pagination3.setCount(searchcount);
 				pagination3.setPage(page);
+				pagination3.setSearch(search);
 				pagination3.init();
-				boardService.getBoard(pagination3);
 				
+				search_list = boardService.searchBoard(pagination3);
+				
+				request.setAttribute("search_list",search_list);
 				request.setAttribute("pagination", pagination3);
 				view = "board/aj-search-list";
 				

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import com.lcomputerstudy.testmvc.database.DBConnection;
 import com.lcomputerstudy.testmvc.vo.Pagination;
+import com.lcomputerstudy.testmvc.vo.Search;
 import com.lcomputerstudy.testmvc.vo.User;
 import com.lcomputerstudy.testmvc.vo.Board;
 
@@ -42,7 +43,7 @@ public class BoardDAO {
 					.append("				ta.*\n")
 					.append("FROM 			board ta,\n")
 					.append("				(SELECT @rownum := (SELECT	COUNT(*)-?+1 FROM board ta)) tb\n")
-					.append("order by `order` ")
+					.append("order by `group` desc, `order` asc ")
 					.append("LIMIT			?, ?\n")
 					
 					.toString();
@@ -113,6 +114,7 @@ public class BoardDAO {
 		
 		return count;
 	}
+
 	
 	public void insertBoard(Board board) {
 		Connection conn = null;
@@ -417,72 +419,121 @@ public class BoardDAO {
 		}
 	}
 	
-	public ArrayList<Board> searchBoard(Board board) {
+	public int getSelectBoardCount(Search search) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		int option = board.getBoard_search_option();
-		ArrayList<Board> searchList = null;
-		ResultSet rs= null;
+		int option = search.getType();
+		ResultSet rs = null;
+		int count=0;
 		
 		try {
-			searchList = new ArrayList<Board>();
 			conn = DBConnection.getConnection();
 			
 			if (option==1) {
-				String sql = "select * from board where b_title like ? ";
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, "%"+board.getBoard_serarch_txt()+"%");
+				String query = "SELECT COUNT(*) count FROM board where b_title like ?";
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, "%"+search.getKeyword()+"%");
 				rs = pstmt.executeQuery();
 				
 				while(rs.next()) {
-					Board se = new Board();
-					se.setB_idx(Integer.parseInt(rs.getString("b_idx")));
-					se.setTitle(rs.getString("b_title"));
-					se.setDate(rs.getString("b_date"));
-					se.setWriter(rs.getString("b_writer"));
-					se.setView_count(Integer.parseInt(rs.getString("view_count")));
-					searchList.add(se);
+					count=rs.getInt("count");
 				}
 				pstmt.close();
 				rs.close();
 			}
 			if (option==2) {
-				String sql = "select * from board where b_title like ? or b_content like ?";
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, "%"+board.getBoard_serarch_txt()+"%");
-				pstmt.setString(2, "%"+board.getBoard_serarch_txt()+"%");
+				String query = "select * from board where b_title like ? or b_content like ?";
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, "%"+search.getKeyword()+"%");
+				pstmt.setString(2, "%"+search.getKeyword()+"%");
 				rs = pstmt.executeQuery();
 				
 				while(rs.next()) {
-					Board se = new Board();
-					se.setB_idx(Integer.parseInt(rs.getString("b_idx")));
-					se.setTitle(rs.getString("b_title"));
-					se.setDate(rs.getString("b_date"));
-					se.setWriter(rs.getString("b_writer"));
-					se.setView_count(Integer.parseInt(rs.getString("view_count")));
-					searchList.add(se);
+					count=rs.getInt("count");
 				}
 				pstmt.close();
-				rs.close();		
+				rs.close();
 			}
 			if (option==3) {
-				String sql = "select * from board where b_writer like ?";
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, "%"+board.getBoard_serarch_txt()+"%");
+				String query = "select * from board where b_writer like ?";
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, "%"+search.getKeyword()+"%");
 				rs = pstmt.executeQuery();
 				
 				while(rs.next()) {
-					Board se = new Board();
-					se.setB_idx(Integer.parseInt(rs.getString("b_idx")));
-					se.setTitle(rs.getString("b_title"));
-					se.setDate(rs.getString("b_date"));
-					se.setWriter(rs.getString("b_writer"));
-					se.setView_count(Integer.parseInt(rs.getString("view_count")));
-					searchList.add(se);
+					count=rs.getInt("count");
 				}
 				pstmt.close();
-				rs.close();		
+				rs.close();
 			}
+			
+		} catch (Exception e) {
+			
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return count;
+	}
+	
+	public ArrayList<Board> searchBoard(Pagination pagination) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs= null;
+		int pageNum = pagination.getPageNum();
+		ArrayList<Board> search_list = null;
+		
+		Search search = pagination.getSearch();
+		
+		int option = search.getType();
+		String search_txt = search.getKeyword();
+		String where = "";
+		
+		if (option == 1) {
+			where = "b_title like ?";
+		}
+		if (option ==2) {
+			where = "b_title like ? or b_content like ?" ;
+		}
+		if (option ==3) {
+			where = "b_writer like ?";
+		}
+		
+		try {
+			conn = DBConnection.getConnection();
+			String query = new StringBuilder()
+					.append("SELECT 		@ROWNUM := @ROWNUM - 1 AS ROWNUM,\n")
+					.append("				ta.*\n")
+					.append("FROM 			board ta,\n")
+					.append("				(SELECT @rownum := (SELECT	COUNT(*)-?+1 FROM board ta)) tb\n")
+					.append("WHERE "+ where +" \n")
+					.append("order by `group` desc, `order` asc ")
+					.append("LIMIT			?, ?\n")
+					.toString();
+			
+	       	pstmt = conn.prepareStatement(query);
+	       	pstmt.setInt(1, pageNum);
+	       	pstmt.setString(2, "%"+search_txt+"%");
+	       	pstmt.setInt(3, pageNum);
+	       	pstmt.setInt(4, Pagination.perPage);
+	        rs = pstmt.executeQuery();
+	        search_list = new ArrayList<Board>();
+	     
+	        while(rs.next()){     
+	        	Board se = new Board();
+				se.setB_idx(Integer.parseInt(rs.getString("b_idx")));
+				se.setTitle(rs.getString("b_title"));
+				se.setDate(rs.getString("b_date"));
+				se.setWriter(rs.getString("b_writer"));
+				se.setView_count(Integer.parseInt(rs.getString("view_count")));
+				search_list.add(se);
+	        }
 			
 		} catch (Exception ex){
 			ex.printStackTrace();
@@ -494,6 +545,7 @@ public class BoardDAO {
 				e.printStackTrace();
 			}
 		}
-		return searchList;
+		return search_list;
 	}	
+	
 }
