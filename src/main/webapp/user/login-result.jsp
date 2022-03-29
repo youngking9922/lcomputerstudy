@@ -50,6 +50,7 @@
 		<li><a href="logout.do">로그아웃</a></li>
 		<li><a href="board-write.do">글쓰기</a></li>
 		<li><a href="board-list.do">글목록보기</a></li>
+		<li><a href="board-file-upload.do">파일업로드</a></li>
 	</ul>
 </div>
 </body>

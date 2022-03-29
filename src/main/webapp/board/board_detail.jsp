@@ -65,6 +65,7 @@
 <div class="wrap">
 	<h1>게시글 보기</h1>
 	<c:forEach items="${list}" var="item" varStatus="status">
+	<input type="hidden" value="${item.b_idx}" class = login_b_idx>
 		<table>
 			<tr>
 				<th>제목</th>
@@ -76,7 +77,7 @@
 			</tr>
 			<tr>
 				<th>작성자</th>
-				<td>${item.writer}</td>
+				<td class="writer_name" >${item.writer}</td>
 			</tr>
 			<tr>
 				<th>작성일시</th>
@@ -89,8 +90,8 @@
 		</table>
 		
 		<ul>
-			<li><a href="board-modify.do?b_idx=${item.b_idx}">수정</a></li>
-			<li><a href="board-delete-process.do?b_idx=${item.b_idx}">삭제</a></li>
+			<li><a class= "modify_btn" href="board-modify.do?b_idx=${item.b_idx}">수정</a></li>
+			<li><a class = "delete_btn" href="board-delete-process.do?b_idx=${item.b_idx}">삭제</a></li>
 			<li><a href="board-list.do">목록</a></li>
 			<li><a href="board-write-reply.do?group=${item.group}&depth=${item.depth}&order=${item.order}">답글달기</a></li>
 		</ul>
@@ -138,7 +139,34 @@
 	</div>
 
 </div>
+<input type="hidden" value="${sessionScope.user.u_name}" class="login_writer">
+<input type="hidden" value="${sessionScope.user.u_admin}" class="login_admin">
+
 <script>
+$(document).on('click', '.modify_btn', function () {
+	var writer_name = $('.writer_name').text();
+	var name = $('.login_writer').val();
+	if (writer_name != name){
+		alert("작성자만 수정이 가능합니다.");
+		return false;
+	}
+});
+
+$(document).on('click', '.delete_btn', function () {
+	var writer_name = $('.writer_name').text();
+	var name = $('.login_writer').val();
+	var admin = $('.login_admin').val();
+	var b_idx = $('.login_b_idx').val();
+	
+	if (writer_name != name ) {
+		if(admin==1){
+			location.href= "board-delete-process.do?b_idx="+b_idx; 
+		} else {
+			alert("작성자만 삭제가 가능합니다.");
+			return false;
+		}
+	}
+});
 
 $(document).on('click', '.Replyshow_btn', function () {
 	var name_by_class = $(this).attr('name');

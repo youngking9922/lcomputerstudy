@@ -42,4 +42,12 @@ public class UserService {
 		return dao.loginUser(idx,pw);
 	}
 	
+	public void addAdmin(User user) {
+		dao.Addadmin(user);
+	}
+	
+	public void deleteAdmin(User user) {
+		dao.Deleteadmin(user);
+	}
+	
 }

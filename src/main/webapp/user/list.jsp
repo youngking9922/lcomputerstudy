@@ -5,6 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <title>회원목록2</title>
 </head>
 <style>
@@ -48,18 +49,20 @@
 <h1>회원 목록</h1>
 	<table >
 		<tr>
-			<td colspan="3">전체 회원 수 : ${usercount}</td>
+			<td colspan="4">전체 회원 수 : ${usercount}</td>
 		</tr>
 		<tr>
 			<th>No</th>
 			<th>ID</th>
 			<th>이름</th>
+			<th>관리자</th>
 		</tr>
 		<c:forEach items="${list}" var="item" varStatus="status">
 			 <tr>
 				<td><a href="user-detail.do?u_idx=${item.u_idx}">${item.ROWNUM}</a></td>
-				<td>${item.u_id}</td>
+				<td class="user_id">${item.u_id}</td>
 				<td>${item.u_name}</td>
+				<td><button type="button" class="add_admin_btn"value="${item.u_idx}">추가</button> <button class="delete_admin_btn" type="button"value="${item.u_idx}">제거</button></td>
 		     <tr>
 		</c:forEach>
 	</table>
@@ -101,4 +104,41 @@
 		</ul>
 	</div>
 </body>
+<script>
+
+$(document).on('click', '.add_admin_btn', function () {
+	user_idx = $(this).val();
+	console.log(user_idx);
+	
+	$.ajax({
+		url:'user-add-admin.do',
+		type:'post',
+		dataType:'html',
+		data:{ user_idx : user_idx,
+		},
+		success : function(result){ 
+
+	    }
+	})
+	
+});
+
+$(document).on('click', '.delete_admin_btn', function () {
+	user_idx = $(this).val();
+	console.log(user_idx);
+	
+	$.ajax({
+		url:'user-delete-admin.do',
+		type:'post',
+		dataType:'html',
+		data:{ user_idx : user_idx,
+		},
+		success : function(result){ 
+
+	    }
+	})
+	
+});
+</script>
+
 </html>

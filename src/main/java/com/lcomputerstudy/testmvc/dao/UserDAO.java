@@ -186,6 +186,8 @@ public class UserDAO {
 				user.setU_pw(rs.getString("u_pw"));
 				user.setU_id(rs.getString("u_id"));
 				user.setU_name(rs.getString("u_name"));
+				user.setU_admin(rs.getInt("u_admin"));
+
 			}
 		} catch(Exception ex){
 			System.out.println("SQLException : "+ex.getMessage());
@@ -198,5 +200,51 @@ public class UserDAO {
 			}
 		}
 		return user;
+	}
+	
+	public void Addadmin(User user) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+			
+		try {
+			conn = DBConnection.getConnection();
+			String sql = "update user set u_admin = 1 where u_idx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, user.getU_idx());
+			pstmt.executeUpdate();
+		} catch( Exception ex) {
+			System.out.println("SQLException : "+ex.getMessage());
+		} finally {
+			try {
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public void Deleteadmin(User user) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+			
+		try {
+			conn = DBConnection.getConnection();
+			String sql = "update user set u_admin = 0 where u_idx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, user.getU_idx());
+			pstmt.executeUpdate();
+		} catch( Exception ex) {
+			System.out.println("SQLException : "+ex.getMessage());
+		} finally {
+			try {
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 }

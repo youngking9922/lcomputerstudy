@@ -6,9 +6,19 @@ public class User {
 	private int u_idx;
 	private String u_id;
 	private String u_pw;
+
 	private String u_name;
 	private String u_tel;
 	private String u_age;
+	private int u_admin;
+
+
+	public int getU_admin() {
+		return u_admin;
+	}
+	public void setU_admin(int u_admin) {
+		this.u_admin = u_admin;
+	}
 	private int ROWNUM;
 	
 	public int getU_idx() {

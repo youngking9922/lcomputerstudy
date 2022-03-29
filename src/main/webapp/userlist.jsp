@@ -29,6 +29,7 @@
 			<th>No</th>
 			<th>ID</th>
 			<th>이름</th>
+			<th>관리자</th>
 		</tr>
 		<%
 			PreparedStatement pstmt = null;
@@ -50,6 +51,7 @@
 			<td><a href="userDetail.jsp?u_idx=<%=u_idx%>"><%=u_idx %></a></td>
 			<td><%=u_id %></td>
 			<td><%=u_name %></td>
+			<td></td>
 		</tr>
 		
 		<%
