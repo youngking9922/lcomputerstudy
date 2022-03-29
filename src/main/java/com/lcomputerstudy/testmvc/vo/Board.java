@@ -20,7 +20,10 @@ public class Board {
 	private int c_order;
 	private int c_depth;
 	private int num;
-
+	
+	private String file1;
+	private String file2;
+	
 	public String getTitle(){
 		return title;
 	}
@@ -171,6 +174,22 @@ public class Board {
 
 	public void setNum(int num) {
 		this.num = num;
+	}
+	
+	public String getFile1() {
+		return file1;
+	}
+
+	public void setFile1(String file1) {
+		this.file1 = file1;
+	}
+
+	public String getFile2() {
+		return file2;
+	}
+
+	public void setFile2(String file2) {
+		this.file2 = file2;
 	}
 	
 	

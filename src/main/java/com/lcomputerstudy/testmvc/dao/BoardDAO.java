@@ -139,6 +139,13 @@ public class BoardDAO {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.executeUpdate();
 			pstmt.close();
+			
+			sql = "insert into file (b_idx,f_name) values(last_insert_id(),?) , (last_insert_id(),?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,board.getFile1());
+			pstmt.setString(2,board.getFile2());
+			pstmt.executeUpdate();
+			pstmt.close();
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		} finally {
