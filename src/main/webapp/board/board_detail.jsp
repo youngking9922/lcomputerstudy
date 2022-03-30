@@ -56,6 +56,11 @@
 	.comment.content{
 		border:1px solid skyblue;
 	}
+	.file_wrap {
+		width:100%;
+		margin:0 auto;
+		text-align:center;
+	 }
 
 </style>
 <body>
@@ -88,6 +93,11 @@
 				<td>${item.view_count}</td>
 			</tr>		
 		</table>
+		<div class="file_wrap">
+			<c:forEach items="${file_list}" var="file" varStatus="status">
+				<img width=200 height=200 src="img/${file.file1}">
+			</c:forEach>
+		</div>
 		
 		<ul>
 			<li><a class= "modify_btn" href="board-modify.do?b_idx=${item.b_idx}">수정</a></li>
@@ -106,6 +116,7 @@
 			<input type="hidden" name="c_depth" value="0">
 			<button  class="insert_comment_btn" type="button">댓글달기</button>
 		</div>
+		
 	</c:forEach>
 	
 	<div id="commentList">
@@ -137,7 +148,6 @@
 			</c:forEach>
 		</table>
 	</div>
-
 </div>
 <input type="hidden" value="${sessionScope.user.u_name}" class="login_writer">
 <input type="hidden" value="${sessionScope.user.u_admin}" class="login_admin">

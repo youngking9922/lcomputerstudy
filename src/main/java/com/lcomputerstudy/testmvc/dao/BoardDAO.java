@@ -569,4 +569,36 @@ public class BoardDAO {
 		return search_list;
 	}	
 	
+	public ArrayList<Board> getFile (Board board){
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs= null;
+		ArrayList<Board> list = null;
+		try {
+			conn = DBConnection.getConnection();
+			String query = "select * from file where b_idx = ?";
+	       	pstmt = conn.prepareStatement(query);
+	       	pstmt.setInt(1, board.getB_idx());
+	        rs = pstmt.executeQuery();
+	        list = new ArrayList<Board>();
+	     
+	        while(rs.next()){     
+	        	Board se = new Board();
+				se.setFile1((rs.getString("f_name")));
+				list.add(se);
+	        }
+			
+		} catch (Exception ex){
+			ex.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null)pstmt.close();
+				if(conn!=null)conn.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+	
 }

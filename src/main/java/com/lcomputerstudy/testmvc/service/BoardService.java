@@ -69,5 +69,9 @@ public class BoardService {
 		return dao.searchBoard(pagination);
 	}
 	
+	public ArrayList<Board> getFile(Board board){
+		return dao.getFile(board);
+	}
+	
 	
 }

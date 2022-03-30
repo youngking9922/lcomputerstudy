@@ -36,7 +36,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 @WebServlet("*.do")
 public class controller extends HttpServlet {
 	private static final String CHARSET = "utf-8";
-    private static final String ATTACHES_DIR = "C:\\attaches";
+    //private static final String ATTACHES_DIR = "C:\\attaches";
+	private static final String ATTACHES_DIR = "C:\\Users\\l3-morning\\Documents\\work10\\lcomputerstudy\\src\\main\\webapp\\img";
     private static final int LIMIT_SIZE_BYTES = 1024 * 1024;
 	private static final long serialVersionUID = 1L;
 
@@ -71,6 +72,7 @@ public class controller extends HttpServlet {
 		
 		ArrayList<Board> comment_list = null;
 		ArrayList<Board> search_list = null;
+		ArrayList<Board> file_list = null;
 				
 		command = checkSession(request,response,command);
 
@@ -242,15 +244,17 @@ public class controller extends HttpServlet {
 				boardService = BoardService.getInstance();
 				ArrayList<Board> list2 = boardService.getInfo(board); 
 				comment_list = boardService.getComment(board);
+				file_list = boardService.getFile(board);
 				request.setAttribute("list", list2);
 				request.setAttribute("comment_list", comment_list);
+				request.setAttribute("file_list", file_list);
 				view = "board/board_detail";
 				break;
 			case "/board-modify.do":
 				board = new Board();
 				board.setB_idx(Integer.parseInt(request.getParameter("b_idx")));
 				boardService = BoardService.getInstance();
-				ArrayList<Board> list3 = boardService.getInfo(board);
+				ArrayList<Board> list3 = boardService.getFile(board);
 				request.setAttribute("list",list3);
 				view = "board/board_modify";
 				break;
